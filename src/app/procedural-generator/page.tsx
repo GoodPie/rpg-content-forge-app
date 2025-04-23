@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FeatureCard } from "@/components/ui/feature-card";
 
 export default function ProceduralGeneratorPage() {
   return (
@@ -9,7 +10,7 @@ export default function ProceduralGeneratorPage() {
           Preview and test variations of templates with tools for analyzing procedural potential and optimizing variation.
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <FeatureCard 
           title="Text Variation Viewer" 
@@ -62,7 +63,7 @@ export default function ProceduralGeneratorPage() {
           }
         />
       </div>
-      
+
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Templates</h2>
         <div className="text-gray-600 dark:text-gray-400 text-center py-8">
@@ -76,7 +77,7 @@ export default function ProceduralGeneratorPage() {
           </Link>
         </div>
       </div>
-      
+
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Understanding Procedural Generation</h2>
         <div className="prose dark:prose-invert max-w-none">
@@ -84,33 +85,33 @@ export default function ProceduralGeneratorPage() {
             Procedural generation allows you to create virtually unlimited content variations from a single template.
             The Procedural Generator provides tools to preview, test, and analyze these variations.
           </p>
-          
+
           <h3>Key Concepts</h3>
-          
+
           <h4>1. Text Variation</h4>
           <p>
             Replace variables with different text options to create unique descriptions and narratives.
             For example, &rdquo;You enter a <span>{"\"{{room_size}}\""}</span> <span>{"\"{{room_type}}\""}</span> could generate &rdquo;You enter a vast chamber&rdquo; or &rdquo;You enter a small cave.&rdquo;
           </p>
-          
+
           <h4>2. Structural Variation</h4>
           <p>
             Create different paths and outcomes based on player choices or random selection.
             This allows for branching narratives and replayable content.
           </p>
-          
+
           <h4>3. Conditional Logic</h4>
           <p>
             Show or hide content based on conditions like player stats, previous choices, or game state.
             This makes content responsive to the player&#39;s experience.
           </p>
-          
+
           <h4>4. Seeds</h4>
           <p>
             A seed is a value that determines which random variations are selected.
             Using the same seed will always produce the same output, allowing for reproducible content.
           </p>
-          
+
           <h3>Getting Started</h3>
           <ol>
             <li>Create a template in the Template Editor</li>
@@ -125,20 +126,3 @@ export default function ProceduralGeneratorPage() {
   );
 }
 
-function FeatureCard({ title, description, href, icon }: { title: string; description: string; href: string; icon: React.ReactNode }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-        <div className="flex items-center mb-4">
-          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-            {icon}
-          </div>
-          <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {title}
-          </h3>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
-  );
-}

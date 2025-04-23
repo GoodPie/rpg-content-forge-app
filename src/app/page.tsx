@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { FeatureCard } from "@/components/ui/feature-card";
+import { PrincipleCard } from "@/components/ui/principle-card";
 
 export default function Home() {
   return (
@@ -108,26 +110,4 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ title, description, href }: { title: string; description: string; href: string }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-          {title}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
-  );
-}
 
-function PrincipleCard({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-      <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">
-        {title}
-      </h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
-    </div>
-  );
-}

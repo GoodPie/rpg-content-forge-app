@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FeatureCard } from "@/components/ui/feature-card";
 
 export default function ExportManagerPage() {
   return (
@@ -9,7 +10,7 @@ export default function ExportManagerPage() {
           Package content for use in games with multiple export formats and optimization options.
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <FeatureCard 
           title="JSON Export" 
@@ -63,7 +64,7 @@ export default function ExportManagerPage() {
           }
         />
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -81,7 +82,7 @@ export default function ExportManagerPage() {
                   <option value="all">All Content</option>
                 </select>
               </div>
-              
+
               <div>
                 <label htmlFor="export-format" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Export Format
@@ -95,7 +96,7 @@ export default function ExportManagerPage() {
                   <option value="binary">Binary</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   id="include-metadata"
@@ -107,7 +108,7 @@ export default function ExportManagerPage() {
                   Include metadata
                 </label>
               </div>
-              
+
               <div className="flex items-center">
                 <input
                   id="optimize-size"
@@ -119,7 +120,7 @@ export default function ExportManagerPage() {
                   Optimize for size
                 </label>
               </div>
-              
+
               <button
                 type="button"
                 className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -130,7 +131,7 @@ export default function ExportManagerPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Exports</h2>
           <div className="text-gray-600 dark:text-gray-400 text-center py-8">
@@ -139,7 +140,7 @@ export default function ExportManagerPage() {
           </div>
         </div>
       </div>
-      
+
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">About Export Manager</h2>
         <div className="prose dark:prose-invert max-w-none">
@@ -147,9 +148,9 @@ export default function ExportManagerPage() {
             The Export Manager allows you to package your procedural content for use in games or sharing with others.
             It supports multiple export formats and provides options for optimizing and customizing your exports.
           </p>
-          
+
           <h3>Export Formats</h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">JSON Package</h4>
@@ -165,7 +166,7 @@ export default function ExportManagerPage() {
                 <li>✗ Slower parsing for large datasets</li>
               </ul>
             </div>
-            
+
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">SQLite Database</h4>
               <p className="text-gray-600 dark:text-gray-400">
@@ -180,7 +181,7 @@ export default function ExportManagerPage() {
                 <li>✗ Less human-readable than JSON</li>
               </ul>
             </div>
-            
+
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Binary Package</h4>
               <p className="text-gray-600 dark:text-gray-400">
@@ -195,7 +196,7 @@ export default function ExportManagerPage() {
                 <li>✗ Requires custom parsing code</li>
               </ul>
             </div>
-            
+
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Custom Format</h4>
               <p className="text-gray-600 dark:text-gray-400">
@@ -211,7 +212,7 @@ export default function ExportManagerPage() {
               </ul>
             </div>
           </div>
-          
+
           <h3 className="mt-6">Export Process</h3>
           <ol>
             <li>Select the content pack or individual templates to export</li>
@@ -220,7 +221,7 @@ export default function ExportManagerPage() {
             <li>Generate the export package</li>
             <li>Download the package or view export details</li>
           </ol>
-          
+
           <h3 className="mt-6">Game Integration</h3>
           <p>
             The exported content can be integrated into games using our reference implementations for popular game engines.
@@ -236,20 +237,3 @@ export default function ExportManagerPage() {
   );
 }
 
-function FeatureCard({ title, description, href, icon }: { title: string; description: string; href: string; icon: React.ReactNode }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-md transition-shadow h-full">
-        <div className="flex items-center mb-4">
-          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-            {icon}
-          </div>
-          <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {title}
-          </h3>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
-  );
-}

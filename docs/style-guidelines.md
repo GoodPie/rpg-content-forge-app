@@ -23,6 +23,16 @@ We use a design system based on CSS variables, which allows for easy theming and
 
 Each color has a foreground variant for text that appears on that color.
 
+#### Using CSS Variables with Tailwind 4
+
+Tailwind 4 introduces a new way to use CSS variables in class names. Instead of using predefined color classes like `bg-background`, we now use the CSS variable directly with the syntax `bg-(--variable-name)`.
+
+Examples:
+- Old syntax: `bg-background`, `text-foreground`, `border-border`
+- New syntax: `bg-(--background)`, `text-(--foreground)`, `border-(--border)`
+
+This approach provides more flexibility and allows us to use CSS variables directly in our Tailwind classes without having to define them in the theme configuration.
+
 ### Typography
 
 We use the Geist font family:
@@ -149,6 +159,137 @@ npm run storybook
 ```
 
 This will start Storybook on port 6006. You can view the components and their documentation at http://localhost:6006.
+
+## CSS Variables Best Practices
+
+1. **Use the new syntax for CSS variables**: When applying CSS variables directly in your HTML or component templates, use the new Tailwind 4 syntax: `bg-(--background)` instead of `bg-background`.
+
+2. **Define CSS variables outside of @layer base**: In Tailwind 4, CSS variables should be defined outside of @layer base. Move your `:root` and `.dark` selectors out of @layer base.
+
+3. **Wrap color values in hsl() or oklch()**: When defining color values in CSS variables, wrap them in hsl() or oklch() functions:
+   ```css
+   :root {
+     --background: hsl(0 0% 100%);
+     /* or */
+     --background: oklch(1 0 0);
+   }
+   ```
+
+4. **Use @theme inline directive**: Use the @theme inline directive to define theme variables that reference your CSS variables:
+   ```css
+   @theme inline {
+     --color-background: var(--background);
+     --color-foreground: var(--foreground);
+   }
+   ```
+
+5. **Remove hsl() wrappers from @theme variables**: When using the @theme directive, don't wrap the variables in hsl():
+   ```css
+   /* Correct */
+   @theme inline {
+     --color-background: var(--background);
+   }
+
+   /* Incorrect */
+   @theme inline {
+     --color-background: hsl(var(--background));
+   }
+   ```
+
+6. **Use the size-* utility**: Tailwind 4 introduces the size-* utility which can replace w-* and h-* when both dimensions are the same:
+   ```html
+   <!-- Old syntax -->
+   <div class="w-4 h-4"></div>
+
+   <!-- New syntax -->
+   <div class="size-4"></div>
+   ```
+
+7. **Use function components instead of forwardRef**: In shadcn/ui components, use function components instead of forwardRef:
+   ```tsx
+   // Old syntax with forwardRef
+   const Component = React.forwardRef<HTMLDivElement, Props>(
+     ({ className, ...props }, ref) => (
+       <div ref={ref} className={cn("...", className)} {...props} />
+     )
+   );
+
+   // New syntax with function component
+   function Component({ className, ...props }: Props) {
+     return (
+       <div data-slot="component" className={cn("...", className)} {...props} />
+     );
+   }
+   ```
+
+8. **Add data-slot attributes**: Add data-slot attributes to components to make them easier to style with Tailwind:
+   ```tsx
+   <div data-slot="card" className="...">...</div>
+   ```
+
+9. **Avoid mixing syntaxes**: Try to be consistent with the syntax you use. If you're working on a new component, use the new syntax. If you're modifying an existing component that uses the old syntax, consider updating it to the new syntax.
+
+10. **Custom CSS variables**: When creating custom CSS variables, define them in the `:root` selector in `globals.css` and use them with the new syntax.
+
+## Example of Using CSS Variables
+
+```tsx
+// Using CSS variables in a component
+<div className="bg-(--background) text-(--foreground) border-(--border)">
+  <h1 className="text-(--primary)">Hello World</h1>
+  <p className="text-(--muted-foreground)">This is a paragraph with muted text.</p>
+  <button className="bg-(--primary) text-(--primary-foreground) hover:bg-(--primary)/90">
+    Click me
+  </button>
+</div>
+```
+
+## Component Definitions
+
+When defining components, use arrow function notation instead of function declarations. This provides better consistency and aligns with modern React practices.
+
+### Preferred (Arrow Function):
+
+```tsx
+export interface MyComponentProps {
+  title: string;
+  description: string;
+}
+
+export const MyComponent = ({ title, description }: MyComponentProps) => {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+  );
+};
+```
+
+### Avoid (Function Declaration):
+
+```tsx
+export interface MyComponentProps {
+  title: string;
+  description: string;
+}
+
+export function MyComponent({ title, description }: MyComponentProps) {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+  );
+}
+```
+
+### Benefits of Arrow Functions:
+
+1. **Consistency**: Provides a consistent style across the codebase
+2. **Conciseness**: More concise syntax, especially for simple components
+3. **Explicit exports**: Makes exports more explicit when combined with named exports
+4. **TypeScript integration**: Works well with TypeScript interfaces and type definitions
 
 ## Best Practices
 

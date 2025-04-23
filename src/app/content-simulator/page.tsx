@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FeatureCard } from "@/components/ui/feature-card";
 
 export default function ContentSimulatorPage() {
   return (
@@ -9,7 +10,7 @@ export default function ContentSimulatorPage() {
           Test content with the D20 system in simulated gameplay to ensure quality and balance.
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <FeatureCard 
           title="Character Sheet" 
@@ -63,7 +64,7 @@ export default function ContentSimulatorPage() {
           }
         />
       </div>
-      
+
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Simulations</h2>
         <div className="text-gray-600 dark:text-gray-400 text-center py-8">
@@ -77,7 +78,7 @@ export default function ContentSimulatorPage() {
           </Link>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">About Content Simulation</h2>
@@ -86,7 +87,7 @@ export default function ContentSimulatorPage() {
               The Content Simulator allows you to test your procedural content in a simulated gameplay environment.
               This helps ensure that your content is balanced, engaging, and functions as expected in the game.
             </p>
-            
+
             <h3>Key Features</h3>
             <ul>
               <li><strong>Character Creation:</strong> Create test characters with different attributes, classes, and backgrounds</li>
@@ -95,7 +96,7 @@ export default function ContentSimulatorPage() {
               <li><strong>Dice Rolling:</strong> Test probability and randomness with virtual dice</li>
               <li><strong>Interactive Simulation:</strong> Play through content as if in a real game</li>
             </ul>
-            
+
             <h3>Benefits of Simulation</h3>
             <ul>
               <li>Identify balance issues before they reach players</li>
@@ -106,7 +107,7 @@ export default function ContentSimulatorPage() {
             </ul>
           </div>
         </div>
-        
+
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">D20 System Overview</h2>
           <div className="prose dark:prose-invert max-w-none">
@@ -114,7 +115,7 @@ export default function ContentSimulatorPage() {
               The Content Simulator uses the D20 system, a tabletop role-playing game mechanic that forms the basis
               for many popular games. Understanding this system will help you create balanced content.
             </p>
-            
+
             <h3>Core Mechanics</h3>
             <ul>
               <li><strong>Ability Scores:</strong> Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma</li>
@@ -122,7 +123,7 @@ export default function ContentSimulatorPage() {
               <li><strong>Attack Rolls:</strong> Roll d20 + attack bonus vs. armor class (AC)</li>
               <li><strong>Saving Throws:</strong> Roll d20 + save modifier vs. difficulty class (DC)</li>
             </ul>
-            
+
             <h3>Difficulty Classes</h3>
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead>
@@ -172,20 +173,3 @@ export default function ContentSimulatorPage() {
   );
 }
 
-function FeatureCard({ title, description, href, icon }: { title: string; description: string; href: string; icon: React.ReactNode }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-md transition-shadow h-full">
-        <div className="flex items-center mb-4">
-          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-            {icon}
-          </div>
-          <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {title}
-          </h3>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
-  );
-}
