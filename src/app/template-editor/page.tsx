@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import {TemplateCard} from "@/components/ui/template-card";
 
 export default function TemplateEditorPage() {
   return (
@@ -11,31 +12,31 @@ export default function TemplateEditorPage() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <TemplateTypeCard 
+        <TemplateCard
           title="Encounters" 
           description="Interactive scenarios with text, options, and outcomes"
           href="/template-editor/encounters"
           count={0}
         />
-        <TemplateTypeCard 
+        <TemplateCard
           title="Locations" 
           description="Places with descriptions, points of interest, and encounters"
           href="/template-editor/locations"
           count={0}
         />
-        <TemplateTypeCard 
+        <TemplateCard
           title="NPCs" 
           description="Characters with procedural names, appearances, personalities, and dialogue"
           href="/template-editor/npcs"
           count={0}
         />
-        <TemplateTypeCard 
+        <TemplateCard
           title="Items" 
           description="Objects with procedural properties and variations"
           href="/template-editor/items"
           count={0}
         />
-        <TemplateTypeCard 
+        <TemplateCard
           title="Quests" 
           description="Multi-step objectives with procedural elements"
           href="/template-editor/quests"
@@ -85,23 +86,5 @@ export default function TemplateEditorPage() {
         </div>
       </div>
     </div>
-  );
-}
-
-function TemplateTypeCard({ title, description, href, count }: { title: string; description: string; href: string; count: number }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            {title}
-          </h3>
-          <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-blue-100 bg-blue-600 rounded">
-            {count}
-          </span>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
   );
 }
