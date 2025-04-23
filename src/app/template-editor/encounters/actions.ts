@@ -1,7 +1,6 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { v4 as uuidv4 } from 'uuid';
 import { EncounterData, ActionResponse, Encounter } from './types';
 import { validateEncounterData, processEncounterData } from './utils';
 
@@ -19,7 +18,6 @@ export async function createEncounter(data: EncounterData): Promise<ActionRespon
     // Create the encounter in the database
     const encounter = await prisma.encounter.create({
       data: {
-        id: uuidv4(),
         ...processedData,
       },
     });
