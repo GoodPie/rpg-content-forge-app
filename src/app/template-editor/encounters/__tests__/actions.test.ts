@@ -1,7 +1,6 @@
 import { createEncounter, updateEncounter, getEncounter } from '../actions';
 import { prisma } from '@/lib/prisma';
-import { EncounterData } from '../types';
-
+import { EncounterData, TagData } from '../types';
 
 
 // Mock the prisma client
@@ -10,6 +9,13 @@ jest.mock('@/lib/prisma', () => ({
     encounter: {
       create: jest.fn(),
       update: jest.fn(),
+      findUnique: jest.fn()
+    },
+    encounterTag: {
+      deleteMany: jest.fn()
+    },
+    tag: {
+      create: jest.fn(),
       findUnique: jest.fn()
     }
   }
@@ -24,52 +30,98 @@ describe('Encounter Actions', () => {
     content: 'This is test content for the encounter'
   };
 
-  const mockEncounter = {
+  // Mock tag data
+  const mockTags: TagData[] = [
+    { id: 'tag-1', name: 'test' },
+    { id: 'tag-2', name: 'encounter' }
+  ];
+
+  // Mock encounter with tags relation
+  const mockEncounterWithTags = {
+    id: 'encounter-1',
     name: 'Test Encounter',
     description: 'A test encounter description',
-    tags: 'test,encounter',
     content: 'This is test content for the encounter',
+    tags: [
+      { tag: { id: 'tag-1', name: 'test' } },
+      { tag: { id: 'tag-2', name: 'encounter' } }
+    ],
     createdAt: new Date(),
     updatedAt: new Date()
   };
 
+  // Mock transformed encounter (matches our Encounter interface)
+  const mockTransformedEncounter = {
+    id: 'encounter-1',
+    name: 'Test Encounter',
+    description: 'A test encounter description',
+    content: 'This is test content for the encounter',
+    tags: mockTags
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock implementations
-    (prisma.encounter.create as jest.Mock).mockResolvedValue(mockEncounter);
-    (prisma.encounter.update as jest.Mock).mockResolvedValue(mockEncounter);
-    (prisma.encounter.findUnique as jest.Mock).mockResolvedValue(mockEncounter);
+    (prisma.encounter.create as jest.Mock).mockResolvedValue(mockEncounterWithTags);
+    (prisma.encounter.update as jest.Mock).mockResolvedValue(mockEncounterWithTags);
+    (prisma.encounter.findUnique as jest.Mock).mockResolvedValue(mockEncounterWithTags);
   });
 
   describe('createEncounter', () => {
     it('should create an encounter successfully', async () => {
       const result = await createEncounter(encounterData);
-      
+
       // Check that prisma.encounter.create was called with the correct data
       expect(prisma.encounter.create).toHaveBeenCalledWith({
         data: {
           name: 'Test Encounter',
           description: 'A test encounter description',
-          tags: 'test,encounter',
-          content: 'This is test content for the encounter'
+          content: 'This is test content for the encounter',
+          tags: {
+            create: [
+              {
+                tag: {
+                  connectOrCreate: {
+                    where: { name: 'test' },
+                    create: { name: 'test' }
+                  }
+                }
+              },
+              {
+                tag: {
+                  connectOrCreate: {
+                    where: { name: 'encounter' },
+                    create: { name: 'encounter' }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        include: {
+          tags: {
+            include: {
+              tag: true
+            }
+          }
         }
       });
-      
-      // Check that the function returns success and the created encounter
+
+      // Check that the function returns success and the transformed encounter
       expect(result).toEqual({
         success: true,
-        encounter: mockEncounter
+        encounter: mockTransformedEncounter
       });
     });
 
     it('should return an error if validation fails', async () => {
       const invalidData = { ...encounterData, name: '' };
       const result = await createEncounter(invalidData);
-      
+
       // Check that prisma.encounter.create was not called
       expect(prisma.encounter.create).not.toHaveBeenCalled();
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -80,9 +132,9 @@ describe('Encounter Actions', () => {
     it('should return an error if database operation fails', async () => {
       // Mock a database error
       (prisma.encounter.create as jest.Mock).mockRejectedValue(new Error('Database error'));
-      
+
       const result = await createEncounter(encounterData);
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -94,39 +146,77 @@ describe('Encounter Actions', () => {
   describe('updateEncounter', () => {
     it('should update an encounter successfully', async () => {
       const result = await updateEncounter('existing-id', encounterData);
-      
+
       // Check that prisma.encounter.findUnique was called to verify the encounter exists
       expect(prisma.encounter.findUnique).toHaveBeenCalledWith({
-        where: { id: 'existing-id' }
+        where: { id: 'existing-id' },
+        include: {
+          tags: {
+            include: {
+              tag: true
+            }
+          }
+        }
       });
-      
+
+      // Check that existing tag relationships are deleted
+      expect(prisma.encounterTag.deleteMany).toHaveBeenCalledWith({
+        where: { encounterId: 'existing-id' }
+      });
+
       // Check that prisma.encounter.update was called with the correct data
       expect(prisma.encounter.update).toHaveBeenCalledWith({
         where: { id: 'existing-id' },
         data: {
           name: 'Test Encounter',
           description: 'A test encounter description',
-          tags: 'test,encounter',
-          content: 'This is test content for the encounter'
+          content: 'This is test content for the encounter',
+          tags: {
+            create: [
+              {
+                tag: {
+                  connectOrCreate: {
+                    where: { name: 'test' },
+                    create: { name: 'test' }
+                  }
+                }
+              },
+              {
+                tag: {
+                  connectOrCreate: {
+                    where: { name: 'encounter' },
+                    create: { name: 'encounter' }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        include: {
+          tags: {
+            include: {
+              tag: true
+            }
+          }
         }
       });
-      
-      // Check that the function returns success and the updated encounter
+
+      // Check that the function returns success and the transformed encounter
       expect(result).toEqual({
         success: true,
-        encounter: mockEncounter
+        encounter: mockTransformedEncounter
       });
     });
 
     it('should return an error if encounter does not exist', async () => {
       // Mock that the encounter doesn't exist
       (prisma.encounter.findUnique as jest.Mock).mockResolvedValue(null);
-      
+
       const result = await updateEncounter('non-existent-id', encounterData);
-      
+
       // Check that prisma.encounter.update was not called
       expect(prisma.encounter.update).not.toHaveBeenCalled();
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -137,10 +227,10 @@ describe('Encounter Actions', () => {
     it('should return an error if validation fails', async () => {
       const invalidData = { ...encounterData, description: '' };
       const result = await updateEncounter('existing-id', invalidData);
-      
+
       // Check that prisma.encounter.update was not called
       expect(prisma.encounter.update).not.toHaveBeenCalled();
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -151,9 +241,9 @@ describe('Encounter Actions', () => {
     it('should return an error if database operation fails', async () => {
       // Mock a database error
       (prisma.encounter.update as jest.Mock).mockRejectedValue(new Error('Database error'));
-      
+
       const result = await updateEncounter('existing-id', encounterData);
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -165,25 +255,32 @@ describe('Encounter Actions', () => {
   describe('getEncounter', () => {
     it('should get an encounter successfully', async () => {
       const result = await getEncounter('existing-id');
-      
-      // Check that prisma.encounter.findUnique was called with the correct id
+
+      // Check that prisma.encounter.findUnique was called with the correct id and includes tags
       expect(prisma.encounter.findUnique).toHaveBeenCalledWith({
-        where: { id: 'existing-id' }
+        where: { id: 'existing-id' },
+        include: {
+          tags: {
+            include: {
+              tag: true
+            }
+          }
+        }
       });
-      
-      // Check that the function returns success and the encounter
+
+      // Check that the function returns success and the transformed encounter
       expect(result).toEqual({
         success: true,
-        encounter: mockEncounter
+        encounter: mockTransformedEncounter
       });
     });
 
     it('should return an error if encounter does not exist', async () => {
       // Mock that the encounter doesn't exist
       (prisma.encounter.findUnique as jest.Mock).mockResolvedValue(null);
-      
+
       const result = await getEncounter('non-existent-id');
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
@@ -194,9 +291,9 @@ describe('Encounter Actions', () => {
     it('should return an error if database operation fails', async () => {
       // Mock a database error
       (prisma.encounter.findUnique as jest.Mock).mockRejectedValue(new Error('Database error'));
-      
+
       const result = await getEncounter('existing-id');
-      
+
       // Check that the function returns an error
       expect(result).toEqual({
         success: false,
