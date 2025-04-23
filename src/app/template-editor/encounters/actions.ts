@@ -1,42 +1,86 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { v4 as uuidv4 } from 'uuid';
+import { EncounterData, ActionResponse, Encounter } from './types';
+import { validateEncounterData, processEncounterData } from './utils';
 
-export async function createEncounter(data: {
-  name: string;
-  description: string;
-  tags: string;
-  content: string;
-}) {
+/**
+ * Creates a new encounter with the provided data
+ */
+export async function createEncounter(data: EncounterData): Promise<ActionResponse<Encounter>> {
   try {
     // Validate form data
-    if (!data.name.trim()) {
-      throw new Error('Template name is required');
-    }
+    validateEncounterData(data);
 
-    if (!data.description.trim()) {
-      throw new Error('Template description is required');
-    }
-
-    if (!data.content.trim()) {
-      throw new Error('Template content is required');
-    }
+    // Process the data (trim values, format tags)
+    const processedData = processEncounterData(data);
 
     // Create the encounter in the database
     const encounter = await prisma.encounter.create({
       data: {
-        id: uuidv4(),
-        name: data.name.trim(),
-        description: data.description.trim(),
-        tags: data.tags.split(',').map(tag => tag.trim()).filter(Boolean).join(','),
-        content: data.content.trim(),
+        ...processedData,
       },
     });
 
     return { success: true, encounter };
   } catch (error) {
     console.error('Error creating encounter:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+    };
+  }
+}
+
+/**
+ * Updates an existing encounter with the provided data
+ */
+export async function updateEncounter(id: string, data: EncounterData): Promise<ActionResponse<Encounter>> {
+  try {
+    // Validate form data
+    validateEncounterData(data);
+
+    // Check if the encounter exists
+    const existingEncounter = await prisma.encounter.findUnique({
+      where: { id },
+    });
+
+    if (!existingEncounter) {
+      throw new Error('Encounter not found');
+    }
+
+    // Process the data (trim values, format tags)
+    const processedData = processEncounterData(data);
+
+    // Update the encounter in the database
+    const encounter = await prisma.encounter.update({
+      where: { id },
+      data: processedData,
+    });
+
+    return { success: true, encounter };
+  } catch (error) {
+    console.error('Error updating encounter:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+    };
+  }
+}
+
+export async function getEncounter(id: string) {
+  try {
+    const encounter = await prisma.encounter.findUnique({
+      where: { id },
+    });
+
+    if (!encounter) {
+      throw new Error('Encounter not found');
+    }
+
+    return { success: true, encounter };
+  } catch (error) {
+    console.error('Error fetching encounter:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
