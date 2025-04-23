@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { prisma } from '@/lib/prisma';
 
 export default async function EncountersPage() {
@@ -45,15 +45,26 @@ export default async function EncountersPage() {
                           <p className="text-sm text-gray-500 dark:text-gray-400">ID: {template.id}</p>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        {template.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                          >
-                            {tag}
-                          </span>
-                        ))}
+                      <div className="flex items-center space-x-3">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          asChild
+                        >
+                          <Link href={`/template-editor/encounters/${template.id}/edit`}>
+                            Edit
+                          </Link>
+                        </Button>
+                        <div className="flex space-x-2">
+                          {template.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="mt-2">
