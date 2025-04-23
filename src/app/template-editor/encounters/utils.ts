@@ -3,6 +3,11 @@
 import { EncounterData, TagData } from './types';
 
 /**
+ * Maximum number of tags allowed per encounter
+ */
+export const MAX_TAGS_PER_ENCOUNTER = 20;
+
+/**
  * Validates encounter data and throws an error if validation fails
  */
 export const validateEncounterData = (data: EncounterData): void => {
@@ -16,6 +21,12 @@ export const validateEncounterData = (data: EncounterData): void => {
 
   if (!data.content.trim()) {
     throw new Error('Template content is required');
+  }
+
+  // Validate tags count to prevent creating too many tags at once
+  const tagCount = parseTags(data.tags).length;
+  if (tagCount > MAX_TAGS_PER_ENCOUNTER) {
+    throw new Error(`Too many tags. Maximum ${MAX_TAGS_PER_ENCOUNTER} tags allowed.`);
   }
 };
 

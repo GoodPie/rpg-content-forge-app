@@ -92,21 +92,39 @@ export const updateEncounter = async (id: string, data: EncounterData): Promise<
     const processedData = processEncounterData(data);
 
     // Parse tags from the comma-separated string
-    const tagNames = parseTags(data.tags);
+    const newTagNames = parseTags(data.tags);
 
-    // Update the encounter in the database
-    // First, delete all existing tag relationships
-    await prisma.encounterTag.deleteMany({
-      where: { encounterId: id }
-    });
+    // Get existing tag names from the encounter
+    const existingTagNames = existingEncounter.tags.map(et => et.tag.name);
 
-    // Then update the encounter and create new tag relationships
+    // Find tags to add and remove
+    const tagsToAdd = newTagNames.filter(tag => !existingTagNames.includes(tag));
+    const tagsToRemove = existingTagNames.filter(tag => !newTagNames.includes(tag));
+
+    // Get IDs of tags to remove
+    const tagIdsToRemove = existingEncounter.tags
+      .filter(et => tagsToRemove.includes(et.tag.name))
+      .map(et => et.tag.id);
+
+    // Only delete tag relationships that need to be removed
+    if (tagIdsToRemove.length > 0) {
+      await prisma.encounterTag.deleteMany({
+        where: { 
+          AND: [
+            { encounterId: id },
+            { tagId: { in: tagIdsToRemove } }
+          ]
+        }
+      });
+    }
+
+    // Then update the encounter and create only new tag relationships
     const encounter = await prisma.encounter.update({
       where: { id },
       data: {
         ...processedData,
-        tags: {
-          create: tagNames.map(tagName => ({
+        tags: tagsToAdd.length > 0 ? {
+          create: tagsToAdd.map(tagName => ({
             tag: {
               connectOrCreate: {
                 where: { name: tagName },
@@ -114,7 +132,7 @@ export const updateEncounter = async (id: string, data: EncounterData): Promise<
               }
             }
           }))
-        }
+        } : undefined
       },
       include: {
         tags: {

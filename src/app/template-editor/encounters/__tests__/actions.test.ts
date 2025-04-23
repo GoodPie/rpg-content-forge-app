@@ -60,7 +60,10 @@ describe('Encounter Actions', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    // Only clear mocks in test environment
+    if (process.env.NODE_ENV === 'test') {
+      jest.clearAllMocks();
+    }
 
     // Default mock implementations
     (prisma.encounter.create as jest.Mock).mockResolvedValue(mockEncounterWithTags);
@@ -113,6 +116,25 @@ describe('Encounter Actions', () => {
         success: true,
         encounter: mockTransformedEncounter
       });
+
+      // Verify that the tags are correctly created and associated with the encounter
+      const createCall = (prisma.encounter.create as jest.Mock).mock.calls[0][0];
+      const tagCreations = createCall.data.tags.create;
+
+      // Check that the correct number of tags are created
+      expect(tagCreations.length).toBe(2);
+
+      // Check that each tag is correctly configured for creation or connection
+      expect(tagCreations[0].tag.connectOrCreate.where.name).toBe('test');
+      expect(tagCreations[0].tag.connectOrCreate.create.name).toBe('test');
+      expect(tagCreations[1].tag.connectOrCreate.where.name).toBe('encounter');
+      expect(tagCreations[1].tag.connectOrCreate.create.name).toBe('encounter');
+
+      // Verify the transformed encounter has the correct tags
+      expect(result.encounter?.tags).toEqual(mockTags);
+      expect(result.encounter?.tags.length).toBe(2);
+      expect(result.encounter?.tags[0].name).toBe('test');
+      expect(result.encounter?.tags[1].name).toBe('encounter');
     });
 
     it('should return an error if validation fails', async () => {
@@ -126,6 +148,23 @@ describe('Encounter Actions', () => {
       expect(result).toEqual({
         success: false,
         error: 'Template name is required'
+      });
+    });
+
+    it('should return an error if too many tags are provided', async () => {
+      // Create a string with more than MAX_TAGS_PER_ENCOUNTER tags
+      const tooManyTags = Array(21).fill(0).map((_, i) => `tag${i}`).join(',');
+      const invalidData = { ...encounterData, tags: tooManyTags };
+
+      const result = await createEncounter(invalidData);
+
+      // Check that prisma.encounter.create was not called
+      expect(prisma.encounter.create).not.toHaveBeenCalled();
+
+      // Check that the function returns an error about too many tags
+      expect(result).toEqual({
+        success: false,
+        error: 'Too many tags. Maximum 20 tags allowed.'
       });
     });
 
@@ -145,6 +184,16 @@ describe('Encounter Actions', () => {
 
   describe('updateEncounter', () => {
     it('should update an encounter successfully', async () => {
+      // Mock existing encounter with different tags to test the optimization
+      const mockExistingEncounter = {
+        ...mockEncounterWithTags,
+        tags: [
+          { tag: { id: 'tag-1', name: 'test' } },
+          { tag: { id: 'tag-3', name: 'old-tag' } } // This tag will be removed
+        ]
+      };
+      (prisma.encounter.findUnique as jest.Mock).mockResolvedValue(mockExistingEncounter);
+
       const result = await updateEncounter('existing-id', encounterData);
 
       // Check that prisma.encounter.findUnique was called to verify the encounter exists
@@ -159,12 +208,24 @@ describe('Encounter Actions', () => {
         }
       });
 
-      // Check that existing tag relationships are deleted
+      // Check that only the necessary tag relationships are deleted
       expect(prisma.encounterTag.deleteMany).toHaveBeenCalledWith({
-        where: { encounterId: 'existing-id' }
+        where: { 
+          AND: [
+            { encounterId: 'existing-id' },
+            { tagId: { in: ['tag-3'] } } // Only the old-tag should be removed
+          ]
+        }
       });
 
+      // Verify the delete call contains the correct conditions
+      const deleteCall = (prisma.encounterTag.deleteMany as jest.Mock).mock.calls[0][0];
+      expect(deleteCall.where.AND).toBeDefined();
+      expect(deleteCall.where.AND[0].encounterId).toBe('existing-id');
+      expect(deleteCall.where.AND[1].tagId.in).toContain('tag-3');
+
       // Check that prisma.encounter.update was called with the correct data
+      // Only the new tag 'encounter' should be created
       expect(prisma.encounter.update).toHaveBeenCalledWith({
         where: { id: 'existing-id' },
         data: {
@@ -173,14 +234,6 @@ describe('Encounter Actions', () => {
           content: 'This is test content for the encounter',
           tags: {
             create: [
-              {
-                tag: {
-                  connectOrCreate: {
-                    where: { name: 'test' },
-                    create: { name: 'test' }
-                  }
-                }
-              },
               {
                 tag: {
                   connectOrCreate: {
@@ -206,6 +259,21 @@ describe('Encounter Actions', () => {
         success: true,
         encounter: mockTransformedEncounter
       });
+
+      // Verify that the tags are correctly updated and associated with the encounter
+      const updateCall = (prisma.encounter.update as jest.Mock).mock.calls[0][0];
+      const tagCreations = updateCall.data.tags.create;
+
+      // Check that only the new tag is created
+      expect(tagCreations.length).toBe(1);
+      expect(tagCreations[0].tag.connectOrCreate.where.name).toBe('encounter');
+      expect(tagCreations[0].tag.connectOrCreate.create.name).toBe('encounter');
+
+      // Verify the transformed encounter has the correct tags
+      expect(result.encounter?.tags).toEqual(mockTags);
+      expect(result.encounter?.tags.length).toBe(2);
+      expect(result.encounter?.tags[0].name).toBe('test');
+      expect(result.encounter?.tags[1].name).toBe('encounter');
     });
 
     it('should return an error if encounter does not exist', async () => {
@@ -235,6 +303,23 @@ describe('Encounter Actions', () => {
       expect(result).toEqual({
         success: false,
         error: 'Template description is required'
+      });
+    });
+
+    it('should return an error if too many tags are provided', async () => {
+      // Create a string with more than MAX_TAGS_PER_ENCOUNTER tags
+      const tooManyTags = Array(21).fill(0).map((_, i) => `tag${i}`).join(',');
+      const invalidData = { ...encounterData, tags: tooManyTags };
+
+      const result = await updateEncounter('existing-id', invalidData);
+
+      // Check that prisma.encounter.update was not called
+      expect(prisma.encounter.update).not.toHaveBeenCalled();
+
+      // Check that the function returns an error about too many tags
+      expect(result).toEqual({
+        success: false,
+        error: 'Too many tags. Maximum 20 tags allowed.'
       });
     });
 
