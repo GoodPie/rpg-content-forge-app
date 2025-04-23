@@ -1,9 +1,16 @@
 import Link from 'next/link';
 import {Button} from "@/components/ui/button";
+import { prisma } from '@/lib/prisma';
 
-export default function EncountersPage() {
-  // This would normally come from a database or API
-  const encounterTemplates: EncounterTemplate[] = [];
+export default async function EncountersPage() {
+  // Fetch encounters from the database
+  const encounterTemplates = await prisma.encounter.findMany();
+
+  // Transform the data to match the expected format
+  const formattedTemplates = encounterTemplates.map(template => ({
+    ...template,
+    tags: template.tags.split(',').filter(Boolean)
+  }));
 
   return (
     <div>
@@ -23,10 +30,10 @@ export default function EncountersPage() {
 
       </div>
 
-      {encounterTemplates.length > 0 ? (
+      {formattedTemplates.length > 0 ? (
         <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-            {encounterTemplates.map((template) => (
+            {formattedTemplates.map((template) => (
               <li key={template.id}>
                 <Link href={`/template-editor/encounters/${template.id}`}
                       className="block hover:bg-gray-50 dark:hover:bg-gray-700">
