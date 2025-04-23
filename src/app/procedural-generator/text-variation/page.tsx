@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import {Button} from "@/components/ui/button";
 
 export default function TextVariationPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
@@ -172,13 +173,11 @@ export default function TextVariationPage() {
             </div>
             
             <div>
-              <button
+              <Button
                 onClick={handleGenerate}
-                disabled={!selectedTemplate || isGenerating}
-                className={`w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${(!selectedTemplate || isGenerating) ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
+                disabled={!selectedTemplate || isGenerating}>
                 {isGenerating ? 'Generating...' : 'Generate Variations'}
-              </button>
+              </Button>
             </div>
           </div>
           

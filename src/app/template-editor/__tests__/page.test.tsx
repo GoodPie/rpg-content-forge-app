@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
 import TemplateEditorPage from '../page';
 
 // Mock the next/link component
@@ -14,7 +14,7 @@ describe('Template Editor Page', () => {
     render(<TemplateEditorPage />);
     
     // Check that the page title is rendered
-    expect(screen.getByText('Template Editor')).toBeInTheDocument();
+    expect(screen.getByText('Template Editor')).toBeInDocument();
     
     // Check that the page description is rendered
     expect(

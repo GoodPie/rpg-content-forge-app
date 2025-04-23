@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { Button } from '../ui/button';
 
 /**
  * Header component for the application
@@ -62,8 +63,7 @@ export function Header() {
           
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
-            <button
-              type="button"
+            <Button
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white"
               aria-controls="mobile-menu"
               aria-expanded="false"
@@ -102,7 +102,7 @@ export function Header() {
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

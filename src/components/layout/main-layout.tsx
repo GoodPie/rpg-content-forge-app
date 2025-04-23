@@ -3,6 +3,7 @@
 import { ReactNode, useState } from 'react';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
+import {Button} from "@/components/ui/button";
 
 /**
  * Main layout component that combines header and sidebar
@@ -21,7 +22,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
       
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar toggle button for mobile */}
-        <button
+        <Button
           className="md:hidden fixed bottom-4 right-4 z-10 p-2 rounded-full bg-blue-500 text-white shadow-lg"
           onClick={toggleSidebar}
           aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
@@ -49,7 +50,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
               />
             )}
           </svg>
-        </button>
+        </Button>
         
         {/* Sidebar */}
         <div 

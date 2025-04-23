@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FeatureCard } from "@/components/ui/feature-card";
+import {Button} from "@/components/ui/button";
 
 export default function ProceduralGeneratorPage() {
   return (
@@ -69,12 +70,12 @@ export default function ProceduralGeneratorPage() {
         <div className="text-gray-600 dark:text-gray-400 text-center py-8">
           <p>No recent templates found.</p>
           <p className="mt-2">Select a template from the Template Editor to generate variations.</p>
-          <Link
-            href="/template-editor"
-            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Go to Template Editor
-          </Link>
+          <Button asChild className="mt-4">
+            <Link href="/template-editor">
+              Go to Template Editor
+            </Link>
+          </Button>
+
         </div>
       </div>
 
