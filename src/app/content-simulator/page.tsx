@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {FeatureCard} from "@/components/ui/feature-card";
 import {Button} from "@/components/ui/button";
 
-export default function ContentSimulatorPage() {
+const ContentSimulatorPage = () => {
   return (
     <div>
       <div className="mb-8">
@@ -196,3 +196,6 @@ export default function ContentSimulatorPage() {
   );
 }
 
+
+
+export default ContentSimulatorPage;

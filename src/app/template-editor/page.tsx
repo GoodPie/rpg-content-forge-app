@@ -3,7 +3,7 @@ import {TemplateCard} from "@/components/ui/template-card";
 import {Card, CardHeader, CardTitle, CardContent, CardDescription} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
-export default function TemplateEditorPage() {
+const TemplateEditorPage = () => {
   return (
     <div>
       <div className="mb-8">
@@ -106,3 +106,5 @@ export default function TemplateEditorPage() {
     </div>
   );
 }
+
+export default TemplateEditorPage;

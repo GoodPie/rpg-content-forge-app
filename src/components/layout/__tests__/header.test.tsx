@@ -26,7 +26,7 @@ describe('Header Component', () => {
     render(<Header />);
     
     // Check that the logo/title is rendered
-    expect(screen.getByText('Content Creation Tool')).toBeInTheDocument();
+    expect(screen.getByText('RPG Content Forge')).toBeInTheDocument();
   });
 
   it('renders desktop navigation links', () => {

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { FeatureCard } from "@/components/ui/feature-card";
-import { PrincipleCard } from "@/components/ui/principle-card";
+import {FeatureCard} from "@/components/ui/feature-card";
+import {PrincipleCard} from "@/components/ui/principle-card";
 
 export default function Home() {
   return (
-    <div className="">
+    <>
       <section className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
           RPG Content Forge
@@ -14,7 +14,8 @@ export default function Home() {
         </p>
         <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
           <p className="text-blue-800 dark:text-blue-200">
-            Create virtually unlimited unique player experiences with a small amount of authored content through procedural generation.
+            Create virtually unlimited unique player experiences with a small amount of authored content through
+            procedural generation.
           </p>
         </div>
       </section>
@@ -89,7 +90,9 @@ export default function Home() {
           Getting Started
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
-          Select a feature from the sidebar to begin creating procedural content, or check out the documentation for more information.
+          Select a feature from the sidebar to begin creating procedural content, or check out the documentation for
+          more
+          information.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -106,6 +109,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </div>
+    </>
   );
 }

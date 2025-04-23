@@ -27,8 +27,8 @@ RPG Content Forge provides a comprehensive environment for developing procedural
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/content-creation-tool.git
-   cd content-creation-tool
+   git clone https://github.com/GoodPie/rpg-content-forge-app
+   cd rpg-content-forge-app
    ```
 
 2. Install dependencies:
@@ -45,7 +45,7 @@ RPG Content Forge provides a comprehensive environment for developing procedural
    yarn dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+4. Open [http://localhost:3001](http://localhost:3000) in your browser to see the application.
 
 ## Features
 

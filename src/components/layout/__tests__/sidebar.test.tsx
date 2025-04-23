@@ -166,7 +166,7 @@ describe('Sidebar Component', () => {
     const activeLink = links.find(link => link.textContent === 'Encounters');
     
     // Check that the active link has the active class
-    expect(activeLink).toHaveClass('bg-(--sidebar-accent)');
+    expect(activeLink).toHaveClass(' text-(--sidebar-foreground/70) hover:bg-(--sidebar-accent/50) hover:text-(--sidebar-foreground)');
   });
 
   it('highlights the active link in general navigation', () => {

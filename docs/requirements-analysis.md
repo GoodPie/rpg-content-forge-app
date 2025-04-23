@@ -1,7 +1,7 @@
-# Content Creation Tool Requirements Analysis
+# RPG Content Forge Requirements Analysis
 
 ## Overview
-This document analyzes the requirements for the Content Creation Tool (CCT) based on the design document. The CCT is a standalone application designed to create, manage, and export modular content packs for text-based adventure games with a focus on procedural generation.
+This document analyzes the requirements for the RPG Content Forge (CCT) based on the design document. The CCT is a standalone application designed to create, manage, and export modular content packs for text-based adventure games with a focus on procedural generation.
 
 ## Core Principles
 1. **Procedurality**: All content is designed for maximum procedural variation

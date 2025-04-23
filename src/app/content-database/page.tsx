@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { FeatureCard } from "@/components/ui/feature-card";
 
-export default function ContentDatabasePage() {
+const ContentDatabasePage = () => {
   return (
     <div>
       <div className="mb-8">
@@ -219,3 +219,5 @@ export default function ContentDatabasePage() {
   );
 }
 
+
+export default ContentDatabasePage;

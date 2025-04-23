@@ -9,7 +9,7 @@ import { SelectField } from "@/components/ui/select-field";
 import { CheckboxField } from "@/components/ui/checkbox-field";
 import { InfoCard } from "@/components/ui/info-card";
 
-export default function ExportManagerPage() {
+const ExportManagerPage = () => {
   // Define features for the feature grid
   const exportFeatures = [
     {
@@ -231,3 +231,5 @@ export default function ExportManagerPage() {
     </div>
   );
 }
+
+export default ExportManagerPage;

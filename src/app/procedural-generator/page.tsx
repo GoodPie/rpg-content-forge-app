@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {FeatureCard} from "@/components/ui/feature-card";
 import {Button} from "@/components/ui/button";
 
-export default function ProceduralGeneratorPage() {
+const ProceduralGeneratorPage = () => {
   return (
     <div>
       <div className="mb-8">
@@ -138,3 +138,4 @@ export default function ProceduralGeneratorPage() {
   );
 }
 
+export default ProceduralGeneratorPage;
