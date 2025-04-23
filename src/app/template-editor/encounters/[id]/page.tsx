@@ -1,15 +1,16 @@
-import { notFound } from 'next/navigation';
+import {notFound} from 'next/navigation';
 import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import { prisma } from '@/lib/prisma';
-import { tagsToArray } from '../utils';
+import {Button} from "@/components/ui/button";
+import {prisma} from '@/lib/prisma';
+import {tagsToArray} from '../utils';
+import EncounterTag from "@/components/features/encounters/encounter-tag";
 
-export default async function EncounterPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function EncounterPage({params}: { params: { id: string } }) {
+  const {id} = params;
 
   // Fetch the encounter from the database
   const encounter = await prisma.encounter.findUnique({
-    where: { id },
+    where: {id},
     include: {
       tags: {
         include: {
@@ -57,12 +58,7 @@ export default async function EncounterPage({ params }: { params: { id: string }
       {tags.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-            >
-              {tag}
-            </span>
+            <EncounterTag tag={tag} key={tag}/>
           ))}
         </div>
       )}

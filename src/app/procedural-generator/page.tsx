@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import {FeatureCard} from "@/components/ui/feature-card";
 import {Button} from "@/components/ui/button";
+import { getAllEncounters } from '@/app/template-editor/encounters/actions';
+import { RecentTemplates } from '@/components/features/templates/recent-templates';
 
-const ProceduralGeneratorPage = () => {
+const ProceduralGeneratorPage = async () => {
+  // Fetch encounters for the recent templates section
+  const encountersResponse = await getAllEncounters();
   return (
     <div>
       <div className="mb-8">
@@ -74,18 +78,11 @@ const ProceduralGeneratorPage = () => {
         />
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Recent Templates</h2>
-        <div className="text-gray-600 dark:text-gray-400 text-center py-8">
-          <p>No recent templates found.</p>
-          <p className="mt-2">Select a template from the Template Editor to generate variations.</p>
-          <Button asChild className="mt-4">
-            <Link href="/template-editor">
-              Go to Template Editor
-            </Link>
-          </Button>
-
-        </div>
+      <div className="mb-8">
+        {/* Use the RecentTemplates component */}
+        {encountersResponse.success && encountersResponse.encounters && (
+          <RecentTemplates encounters={encountersResponse?.encounters} />
+        )}
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">

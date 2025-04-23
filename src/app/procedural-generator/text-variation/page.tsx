@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {Button} from "@/components/ui/button";
+import { Encounter } from '@/app/template-editor/encounters/types';
+import { getAllEncounters } from '@/app/template-editor/encounters/actions';
 
 export default function TextVariationPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
@@ -10,105 +12,122 @@ export default function TextVariationPage() {
   const [seed, setSeed] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [variations, setVariations] = useState<string[]>([]);
-  
-  // Mock templates - in a real app, these would come from an API or database
-  const templates = [
-    { id: 'forest_stranger', name: 'Forest Stranger Encounter' },
-    { id: 'abandoned_mine', name: 'Abandoned Mine Location' },
-    { id: 'village_elder', name: 'Village Elder NPC' },
-  ];
-  
-  const handleGenerate = () => {
-    if (!selectedTemplate) return;
-    
-    setIsGenerating(true);
-    
-    // Simulate API call to generate variations
-    setTimeout(() => {
-      // Mock variations based on the selected template
-      let generatedVariations: string[] = [];
-      
-      if (selectedTemplate === 'forest_stranger') {
-        const movementVerbs = ['walk', 'trek', 'journey', 'make your way', 'wander'];
-        const forestStates = ['dim', 'misty', 'dense', 'shadowy', 'sunlit', 'ancient', 'quiet'];
-        const discoveryVerbs = ['spot', 'notice', 'catch sight of', 'observe', 'come across'];
-        const strangers = ['a hooded figure', 'an old man sitting on a stump', 'a wounded traveler', 'a merchant resting from the road'];
-        const landmarks = ['a small campfire', 'a strange stone formation', 'an ancient tree', 'a small clearing'];
-        
-        for (let i = 0; i < variationCount; i++) {
-          const movementVerb = movementVerbs[Math.floor(Math.random() * movementVerbs.length)];
-          const forestState = forestStates[Math.floor(Math.random() * forestStates.length)];
-          const discoveryVerb = discoveryVerbs[Math.floor(Math.random() * discoveryVerbs.length)];
-          const stranger = strangers[Math.floor(Math.random() * strangers.length)];
-          const landmark = landmarks[Math.floor(Math.random() * landmarks.length)];
-          
-          generatedVariations.push(`As you ${movementVerb} through the ${forestState} forest, you ${discoveryVerb} ${stranger} near ${landmark}.`);
+  const [encounters, setEncounters] = useState<Encounter[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Fetch encounters from the database
+  useEffect(() => {
+    const fetchEncounters = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getAllEncounters();
+        if (response.success && response.encounters) {
+          setEncounters(response.encounters);
         }
-      } else if (selectedTemplate === 'abandoned_mine') {
-        const adjectives = ['Abandoned', 'Lost', 'Forgotten', 'Ancient', 'Haunted', 'Collapsed'];
-        const mineTypes = ['Mine', 'Dig', 'Excavation', 'Quarry', 'Pit', 'Delve', 'Shaft'];
-        const entranceDescs = [
-          'Mining equipment lies scattered about, covered in years of dust.',
-          'Wooden supports rot around the entrance, threatening collapse.',
-          'Cart tracks disappear into the dark maw of the mine.',
-          'The entrance is partially collapsed, leaving only a narrow passage.'
-        ];
-        const interiorDescs = [
-          'The tunnel leads into darkness punctuated by the sound of dripping water.',
-          'A musty smell emanates from the depths of the shaft.',
-          'The walls glitter faintly with remnants of mineral deposits.',
-          'Distant echoes suggest vast chambers deep within.'
-        ];
-        
-        for (let i = 0; i < variationCount; i++) {
-          const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-          const mineType = mineTypes[Math.floor(Math.random() * mineTypes.length)];
-          const entranceDesc = entranceDescs[Math.floor(Math.random() * entranceDescs.length)];
-          const interiorDesc = interiorDescs[Math.floor(Math.random() * interiorDescs.length)];
-          
-          generatedVariations.push(`The ${adjective} ${mineType} looms before you. ${entranceDesc} ${interiorDesc}`);
-        }
-      } else if (selectedTemplate === 'village_elder') {
-        const ageDescs = [
-          'Gray-haired and stooped with age,',
-          'Despite advanced years, still hale and strong,',
-          'With deeply lined face and wise eyes,',
-          'White-bearded and ancient,'
-        ];
-        const buildDescs = [
-          'of slight build but dignified bearing,',
-          'sturdy and weathered by a lifetime of work,',
-          'thin but surprisingly spry,',
-          'with gnarled hands that speak of decades of labor,'
-        ];
-        const features = [
-          'eyes that twinkle with hidden knowledge,',
-          'a face marked with the wrinkles of frequent smiles,',
-          'a prominent scar from some long-ago trial,',
-          'an ornate walking staff always in hand,'
-        ];
-        const clothing = [
-          'dressed in simple but well-maintained clothes.',
-          'wearing garments that reflect local traditions.',
-          'adorned with symbols of office and authority.',
-          'wearing practical, mended clothing that speaks of hard times.'
-        ];
-        
-        for (let i = 0; i < variationCount; i++) {
-          const ageDesc = ageDescs[Math.floor(Math.random() * ageDescs.length)];
-          const buildDesc = buildDescs[Math.floor(Math.random() * buildDescs.length)];
-          const feature = features[Math.floor(Math.random() * features.length)];
-          const clothingDesc = clothing[Math.floor(Math.random() * clothing.length)];
-          
-          generatedVariations.push(`${ageDesc} ${buildDesc} with ${feature} ${clothingDesc}`);
+      } catch (error) {
+        console.error('Error fetching encounters:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEncounters();
+  }, []);
+
+  // Helper function to parse variables from encounter content
+  const parseVariables = (content: string) => {
+    const variableRegex = /{{([^}]+)}}/g;
+    const variables: Record<string, string[]> = {};
+
+    // Find all variable definitions in the content
+    const lines = content.split('\n');
+    let currentVariable = '';
+
+    for (const line of lines) {
+      // Check if line contains a variable definition
+      if (line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/)) {
+        const match = line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/);
+        if (match) {
+          const [_, varName, varValues] = match;
+          variables[varName] = varValues.split(',').map(v => v.trim());
         }
       }
-      
-      setVariations(generatedVariations);
-      setIsGenerating(false);
-    }, 1000);
+
+      // Also check for variables in the text
+      let match;
+      while ((match = variableRegex.exec(content)) !== null) {
+        const varName = match[1].trim();
+        if (!variables[varName]) {
+          variables[varName] = [];
+        }
+      }
+    }
+
+    return variables;
   };
-  
+
+  // Helper function to replace variables in a template
+  const replaceVariables = (template: string, variables: Record<string, string[]>) => {
+    let result = template;
+
+    // Replace each variable with a random value from its array
+    for (const [varName, values] of Object.entries(variables)) {
+      if (values.length > 0) {
+        const randomValue = values[Math.floor(Math.random() * values.length)];
+        const regex = new RegExp(`{{${varName}}}`, 'g');
+        result = result.replace(regex, randomValue);
+      }
+    }
+
+    return result;
+  };
+
+  const handleGenerate = () => {
+    if (!selectedTemplate) return;
+
+    setIsGenerating(true);
+
+    // Find the selected encounter
+    const selectedEncounter = encounters.find(e => e.id === selectedTemplate);
+
+    if (!selectedEncounter) {
+      setIsGenerating(false);
+      return;
+    }
+
+    // Process with a slight delay to show loading state
+    setTimeout(() => {
+      try {
+        // Extract the template text and variables from the encounter content
+        const content = selectedEncounter.content;
+
+        // Parse variables from the content
+        const variables = parseVariables(content);
+
+        // Extract the template text (first paragraph before variables)
+        let templateText = content;
+        const variablesIndex = content.indexOf('Variables:');
+        if (variablesIndex !== -1) {
+          templateText = content.substring(0, variablesIndex).trim();
+        }
+
+        // Generate variations
+        const generatedVariations: string[] = [];
+        for (let i = 0; i < variationCount; i++) {
+          const variation = replaceVariables(templateText, variables);
+          generatedVariations.push(variation);
+        }
+
+        setVariations(generatedVariations);
+      } catch (error) {
+        console.error('Error generating variations:', error);
+        setVariations([`Error generating variations: ${error instanceof Error ? error.message : 'Unknown error'}`]);
+      } finally {
+        setIsGenerating(false);
+      }
+    }, 500);
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -117,7 +136,7 @@ export default function TextVariationPage() {
           Generate and view multiple variations of text elements with different variable combinations.
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6">
@@ -130,16 +149,23 @@ export default function TextVariationPage() {
                 value={selectedTemplate}
                 onChange={(e) => setSelectedTemplate(e.target.value)}
                 className="block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-white"
+                disabled={isLoading}
               >
                 <option value="">Select a template</option>
-                {templates.map((template) => (
-                  <option key={template.id} value={template.id}>
-                    {template.name}
-                  </option>
-                ))}
+                {isLoading ? (
+                  <option value="" disabled>Loading encounters...</option>
+                ) : encounters.length > 0 ? (
+                  encounters.map((encounter) => (
+                    <option key={encounter.id} value={encounter.id}>
+                      {encounter.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>No encounters found</option>
+                )}
               </select>
             </div>
-            
+
             <div>
               <label htmlFor="count" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Number of Variations
@@ -154,7 +180,7 @@ export default function TextVariationPage() {
                 className="block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:text-white"
               />
             </div>
-            
+
             <div>
               <label htmlFor="seed" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Seed (Optional)
@@ -171,7 +197,7 @@ export default function TextVariationPage() {
                 Using the same seed will generate the same variations.
               </p>
             </div>
-            
+
             <div>
               <Button
                 onClick={handleGenerate}
@@ -180,72 +206,72 @@ export default function TextVariationPage() {
               </Button>
             </div>
           </div>
-          
+
           <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Template Variables</h2>
-            {selectedTemplate === 'forest_stranger' && (
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">movement_verb:</span> walk, trek, journey, make your way, wander
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">forest_state:</span> dim, misty, dense, shadowy, sunlit, ancient, quiet
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">discovery_verb:</span> spot, notice, catch sight of, observe, come across
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">a_stranger:</span> a hooded figure, an old man sitting on a stump, a wounded traveler, a merchant resting from the road
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">a_landmark:</span> a small campfire, a strange stone formation, an ancient tree, a small clearing
-                </p>
-              </div>
-            )}
-            {selectedTemplate === 'abandoned_mine' && (
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">adjective:</span> Abandoned, Lost, Forgotten, Ancient, Haunted, Collapsed
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">mine_type:</span> Mine, Dig, Excavation, Quarry, Pit, Delve, Shaft
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">entrance_desc:</span> Various descriptions of the mine entrance
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">interior_desc:</span> Various descriptions of the mine interior
-                </p>
-              </div>
-            )}
-            {selectedTemplate === 'village_elder' && (
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">age_description:</span> Various descriptions of the elder's age
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">build_description:</span> Various descriptions of the elder's build
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">distinctive_feature:</span> Various distinctive features
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">clothing_description:</span> Various clothing descriptions
-                </p>
-              </div>
-            )}
-            {!selectedTemplate && (
+            {isLoading ? (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Loading template variables...
+              </p>
+            ) : selectedTemplate ? (
+              (() => {
+                const selectedEncounter = encounters.find(e => e.id === selectedTemplate);
+                if (!selectedEncounter) {
+                  return (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Template not found.
+                    </p>
+                  );
+                }
+
+                // Parse variables from the content
+                const content = selectedEncounter.content;
+                const variables: Record<string, string[]> = {};
+
+                // Find variable definitions in the content
+                const variablesSection = content.indexOf('Variables:');
+                if (variablesSection === -1) {
+                  return (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      No variables found in this template.
+                    </p>
+                  );
+                }
+
+                const variableLines = content.substring(variablesSection).split('\n');
+
+                // Process each line after "Variables:"
+                return (
+                  <div className="space-y-2">
+                    {variableLines.slice(1).map((line, index) => {
+                      // Check if line contains a variable definition
+                      const match = line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/);
+                      if (!match) return null;
+
+                      const [_, varName, varValues] = match;
+                      const values = varValues.split(',').map(v => v.trim()).join(', ');
+
+                      return (
+                        <p key={index} className="text-sm text-gray-600 dark:text-gray-400">
+                          <span className="font-medium">{varName}:</span> {values}
+                        </p>
+                      );
+                    }).filter(Boolean)}
+                  </div>
+                );
+              })()
+            ) : (
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Select a template to see its variables.
               </p>
             )}
           </div>
         </div>
-        
+
         <div className="lg:col-span-2">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Generated Variations</h2>
-            
+
             {variations.length > 0 ? (
               <div className="space-y-4">
                 {variations.map((variation, index) => (
@@ -262,7 +288,7 @@ export default function TextVariationPage() {
               </div>
             )}
           </div>
-          
+
           <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Tips for Text Variation</h2>
             <div className="prose dark:prose-invert max-w-none">

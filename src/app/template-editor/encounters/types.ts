@@ -40,4 +40,5 @@ export interface ActionResponse<T = any> {
   success: boolean;
   error?: string;
   encounter?: T;
+  encounters?: T[];
 }
