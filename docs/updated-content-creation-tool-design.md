@@ -1,11 +1,11 @@
-# Content Creation Tool Design Document
+# RPG Content Forge Design Document
 ## for Infinite Adventures: Procedural Generation Focus
 
 ---
 
 ## 1. EXECUTIVE SUMMARY
 
-The Content Creation Tool (CCT) is a standalone application designed to create, manage, and export modular content packs for text-based adventure games. It provides a comprehensive environment for developing procedurally generated encounters, locations, NPCs, items, and other game elements through a template-based approach. The tool emphasizes procedural generation at every level, allowing a small amount of authored content to create virtually unlimited unique player experiences.
+The RPG Content Forge (RCF) is a standalone application designed to create, manage, and export modular content packs for text-based adventure games. It provides a comprehensive environment for developing procedurally generated encounters, locations, NPCs, items, and other game elements through a template-based approach. The tool emphasizes procedural generation at every level, allowing a small amount of authored content to create virtually unlimited unique player experiences.
 
 ### 1.1 Core Principles
 
@@ -25,7 +25,7 @@ The Content Creation Tool (CCT) is a standalone application designed to create, 
 
 ```
 ┌─────────────────────────────────────────┐
-│           Content Creation Tool          │
+│           RPG Content Forge          │
 ├─────────────┬──────────────┬────────────┤
 │  Template   │  Procedural  │  Content   │
 │   Editor    │  Generator   │  Simulator │
@@ -1341,4 +1341,4 @@ ForestAdventures/
 
 ---
 
-*© 2025 [Your Studio Name]. This document describes the design of a procedural content creation tool for adventure games.*
+*© 2025 GoodPie. This document describes the design of a procedural content creation tool for adventure games.*

@@ -1,6 +1,6 @@
-# Content Creation Tool Task List
+# RPG Content Forge Task List
 
-This document outlines the tasks required to implement the Content Creation Tool (CCT) based on the design document and requirements analysis.
+This document outlines the tasks required to implement the RPG Content Forge (CCT) based on the design document and requirements analysis.
 
 ## Phase 1: Project Setup and Core Infrastructure (2-3 weeks)
 

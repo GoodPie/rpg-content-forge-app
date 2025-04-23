@@ -1,7 +1,7 @@
-# Content Creation Tool Project Summary
+# RPG Content Forge Project Summary
 
 ## Project Overview
-The Content Creation Tool (CCT) is a Next.js application designed to create, manage, and export modular content packs for text-based adventure games. It focuses on procedural generation, allowing a small amount of authored content to create virtually unlimited unique player experiences.
+The RPG Content Forge (CCT) is a Next.js application designed to create, manage, and export modular content packs for text-based adventure games. It focuses on procedural generation, allowing a small amount of authored content to create virtually unlimited unique player experiences.
 
 ## Core Principles
 1. **Procedurality**: All content is designed for maximum procedural variation
@@ -103,4 +103,4 @@ The following documents provide detailed information about the project:
 4. [User Guide Template](./user-guides/template.md): Template for feature documentation
 
 ## Conclusion
-The Content Creation Tool project is a comprehensive application for creating procedurally generated content for text-based adventure games. By following the established guidelines and development plan, we will create a modular, well-tested, and user-friendly tool that enables content creators to produce rich, varied game content with minimal effort.
+The RPG Content Forge project is a comprehensive application for creating procedurally generated content for text-based adventure games. By following the established guidelines and development plan, we will create a modular, well-tested, and user-friendly tool that enables content creators to produce rich, varied game content with minimal effort.

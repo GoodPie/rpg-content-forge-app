@@ -1,6 +1,6 @@
-# Content Creation Tool Project Guidelines
+# RPG Content Forge Project Guidelines
 
-This document outlines the standards, conventions, and best practices for developing the Content Creation Tool (CCT) using Next.js and Tailwind CSS.
+This document outlines the standards, conventions, and best practices for developing the RPG Content Forge (CCT) using Next.js and Tailwind CSS.
 
 ## 1. Coding Standards
 
