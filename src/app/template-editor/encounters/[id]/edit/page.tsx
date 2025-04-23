@@ -5,6 +5,7 @@ import { EncounterForm } from '@/components/features/encounters/encounter-form';
 import { TemplateSyntaxHelp } from '@/components/features/encounters/template-syntax-help';
 import { updateEncounter, getEncounter } from '../../actions';
 import { EncounterData } from '../../types';
+import { tagsToString } from '../../utils';
 
 /**
  * Page component for editing an existing encounter
@@ -28,7 +29,7 @@ const EditEncounterPage = ({ params }: { params: { id: string } }) => {
         setEncounterData({
           name: result.encounter.name,
           description: result.encounter.description,
-          tags: result.encounter.tags,
+          tags: tagsToString(result.encounter.tags),
           content: result.encounter.content,
         });
 

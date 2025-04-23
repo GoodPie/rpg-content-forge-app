@@ -1,28 +1,60 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { EncounterData, ActionResponse, Encounter } from './types';
-import { validateEncounterData, processEncounterData } from './utils';
+import { EncounterData, ActionResponse, Encounter, TagData } from './types';
+import { validateEncounterData, processEncounterData, parseTags } from './utils';
 
 /**
  * Creates a new encounter with the provided data
  */
-export async function createEncounter(data: EncounterData): Promise<ActionResponse<Encounter>> {
+export const createEncounter = async (data: EncounterData): Promise<ActionResponse<Encounter>> => {
   try {
     // Validate form data
     validateEncounterData(data);
 
-    // Process the data (trim values, format tags)
+    // Process the data (trim values)
     const processedData = processEncounterData(data);
 
-    // Create the encounter in the database
+    // Parse tags from the comma-separated string
+    const tagNames = parseTags(data.tags);
+
+    // Create the encounter with tags in the database
     const encounter = await prisma.encounter.create({
       data: {
         ...processedData,
+        tags: {
+          create: tagNames.map(tagName => ({
+            tag: {
+              connectOrCreate: {
+                where: { name: tagName },
+                create: { name: tagName }
+              }
+            }
+          }))
+        }
       },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     });
 
-    return { success: true, encounter };
+    // Transform the data to match the Encounter interface
+    const transformedEncounter: Encounter = {
+      id: encounter.id,
+      name: encounter.name,
+      description: encounter.description,
+      content: encounter.content,
+      tags: encounter.tags.map(et => ({
+        id: et.tag.id,
+        name: et.tag.name
+      }))
+    };
+
+    return { success: true, encounter: transformedEncounter };
   } catch (error) {
     console.error('Error creating encounter:', error);
     return { 
@@ -30,12 +62,12 @@ export async function createEncounter(data: EncounterData): Promise<ActionRespon
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
     };
   }
-}
+};
 
 /**
  * Updates an existing encounter with the provided data
  */
-export async function updateEncounter(id: string, data: EncounterData): Promise<ActionResponse<Encounter>> {
+export const updateEncounter = async (id: string, data: EncounterData): Promise<ActionResponse<Encounter>> => {
   try {
     // Validate form data
     validateEncounterData(data);
@@ -43,22 +75,87 @@ export async function updateEncounter(id: string, data: EncounterData): Promise<
     // Check if the encounter exists
     const existingEncounter = await prisma.encounter.findUnique({
       where: { id },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     });
 
     if (!existingEncounter) {
       throw new Error('Encounter not found');
     }
 
-    // Process the data (trim values, format tags)
+    // Process the data (trim values)
     const processedData = processEncounterData(data);
 
-    // Update the encounter in the database
+    // Parse tags from the comma-separated string
+    const newTagNames = parseTags(data.tags);
+
+    // Get existing tag names from the encounter
+    const existingTagNames = existingEncounter.tags.map(et => et.tag.name);
+
+    // Find tags to add and remove
+    const tagsToAdd = newTagNames.filter(tag => !existingTagNames.includes(tag));
+    const tagsToRemove = existingTagNames.filter(tag => !newTagNames.includes(tag));
+
+    // Get IDs of tags to remove
+    const tagIdsToRemove = existingEncounter.tags
+      .filter(et => tagsToRemove.includes(et.tag.name))
+      .map(et => et.tag.id);
+
+    // Only delete tag relationships that need to be removed
+    if (tagIdsToRemove.length > 0) {
+      await prisma.encounterTag.deleteMany({
+        where: { 
+          AND: [
+            { encounterId: id },
+            { tagId: { in: tagIdsToRemove } }
+          ]
+        }
+      });
+    }
+
+    // Then update the encounter and create only new tag relationships
     const encounter = await prisma.encounter.update({
       where: { id },
-      data: processedData,
+      data: {
+        ...processedData,
+        tags: tagsToAdd.length > 0 ? {
+          create: tagsToAdd.map(tagName => ({
+            tag: {
+              connectOrCreate: {
+                where: { name: tagName },
+                create: { name: tagName }
+              }
+            }
+          }))
+        } : undefined
+      },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     });
 
-    return { success: true, encounter };
+    // Transform the data to match the Encounter interface
+    const transformedEncounter: Encounter = {
+      id: encounter.id,
+      name: encounter.name,
+      description: encounter.description,
+      content: encounter.content,
+      tags: encounter.tags.map(et => ({
+        id: et.tag.id,
+        name: et.tag.name
+      }))
+    };
+
+    return { success: true, encounter: transformedEncounter };
   } catch (error) {
     console.error('Error updating encounter:', error);
     return { 
@@ -66,19 +163,41 @@ export async function updateEncounter(id: string, data: EncounterData): Promise<
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
     };
   }
-}
+};
 
-export async function getEncounter(id: string) {
+/**
+ * Retrieves an encounter by ID
+ */
+export const getEncounter = async (id: string): Promise<ActionResponse<Encounter>> => {
   try {
     const encounter = await prisma.encounter.findUnique({
       where: { id },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     });
 
     if (!encounter) {
       throw new Error('Encounter not found');
     }
 
-    return { success: true, encounter };
+    // Transform the data to match the Encounter interface
+    const transformedEncounter: Encounter = {
+      id: encounter.id,
+      name: encounter.name,
+      description: encounter.description,
+      content: encounter.content,
+      tags: encounter.tags.map(et => ({
+        id: et.tag.id,
+        name: et.tag.name
+      }))
+    };
+
+    return { success: true, encounter: transformedEncounter };
   } catch (error) {
     console.error('Error fetching encounter:', error);
     return { 
@@ -86,4 +205,4 @@ export async function getEncounter(id: string) {
       error: error instanceof Error ? error.message : 'An unknown error occurred' 
     };
   }
-}
+};

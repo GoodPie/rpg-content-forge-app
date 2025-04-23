@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { prisma } from '@/lib/prisma';
+import { tagsToArray } from '../utils';
 
 export default async function EncounterPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -9,6 +10,13 @@ export default async function EncounterPage({ params }: { params: { id: string }
   // Fetch the encounter from the database
   const encounter = await prisma.encounter.findUnique({
     where: { id },
+    include: {
+      tags: {
+        include: {
+          tag: true
+        }
+      }
+    }
   });
 
   // If encounter doesn't exist, show 404
@@ -17,7 +25,10 @@ export default async function EncounterPage({ params }: { params: { id: string }
   }
 
   // Format tags for display
-  const tags = encounter.tags.split(',').filter(Boolean);
+  const tags = tagsToArray(encounter.tags.map(et => ({
+    id: et.tag.id,
+    name: et.tag.name
+  })));
 
   return (
     <div>

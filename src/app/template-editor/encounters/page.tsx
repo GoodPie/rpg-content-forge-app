@@ -1,15 +1,27 @@
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { prisma } from '@/lib/prisma';
+import { tagsToArray } from './utils';
 
 export default async function EncountersPage() {
   // Fetch encounters from the database
-  const encounterTemplates = await prisma.encounter.findMany();
+  const encounterTemplates = await prisma.encounter.findMany({
+    include: {
+      tags: {
+        include: {
+          tag: true
+        }
+      }
+    }
+  });
 
   // Transform the data to match the expected format
   const formattedTemplates = encounterTemplates.map(template => ({
     ...template,
-    tags: template.tags.split(',').filter(Boolean)
+    tags: tagsToArray(template.tags.map(et => ({
+      id: et.tag.id,
+      name: et.tag.name
+    })))
   }));
 
   return (
