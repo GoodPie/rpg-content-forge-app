@@ -40,16 +40,13 @@ describe('Button Component', () => {
   // Test rendering with different sizes
   it('renders with the correct size classes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-8');
-    expect(screen.getByRole('button')).toHaveClass('px-3');
+    expect(screen.getByRole('button')).toHaveClass('px-3 py-1.5 text-xs');
 
-    rerender(<Button size="default">Medium</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-9');
-    expect(screen.getByRole('button')).toHaveClass('px-4');
+    rerender(<Button size="md">Medium</Button>);
+    expect(screen.getByRole('button')).toHaveClass('px-4 py-2 text-sm');
 
     rerender(<Button size="lg">Large</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-10');
-    expect(screen.getByRole('button')).toHaveClass('px-6');
+    expect(screen.getByRole('button')).toHaveClass('px-6 py-3 text-base');
   });
 
   // Test disabled state
@@ -62,8 +59,7 @@ describe('Button Component', () => {
     expect(button).toBeDisabled();
 
     // Check that the button has the disabled classes
-    expect(button).toHaveClass('disabled:opacity-50');
-    expect(button).toHaveClass('disabled:pointer-events-none');
+    expect(button).toHaveClass('opacity-50 cursor-not-allowed');
   });
 
   // Test loading state

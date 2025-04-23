@@ -1,6 +1,7 @@
-import Link from 'next/link';
+'use client';.
+
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { FeatureGrid } from "@/components/ui/feature-grid";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -113,7 +114,7 @@ export default function ExportManagerPage() {
               />
 
               <Button
-                className="w-full"
+
                 onClick={() => alert('Export functionality would be implemented here')}
               >
                 Export Content
