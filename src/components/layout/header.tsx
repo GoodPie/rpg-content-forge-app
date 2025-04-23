@@ -25,7 +25,7 @@ export function Header() {
           <div className="flex justify-start">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-(--foreground)">
-                Content Creation Tool
+                RPG Content Forge
               </Link>
             </div>
           </div>

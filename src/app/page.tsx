@@ -7,7 +7,7 @@ export default function Home() {
     <div className="">
       <section className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Content Creation Tool
+          RPG Content Forge
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
           A comprehensive environment for developing procedurally generated content for text-based adventure games.
@@ -109,5 +109,3 @@ export default function Home() {
     </div>
   );
 }
-
-
