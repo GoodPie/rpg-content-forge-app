@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { createEncounter } from '../actions';
 
 export default function NewEncounterPage() {
   const [error, setError] = useState<string | null>(null);
@@ -37,21 +38,11 @@ export default function NewEncounterPage() {
     setError(null);
 
     try {
-      // This would normally be an API call to save the template
-      // For now, we'll just simulate a successful save
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call the server action to create the encounter
+      const result = await createEncounter(data);
 
-      // Validate form data
-      if (!data.name.trim()) {
-        throw new Error('Template name is required');
-      }
-
-      if (!data.description.trim()) {
-        throw new Error('Template description is required');
-      }
-
-      if (!data.content.trim()) {
-        throw new Error('Template content is required');
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to create encounter');
       }
 
       // Success!

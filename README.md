@@ -22,6 +22,7 @@ RPG Content Forge provides a comprehensive environment for developing procedural
 
 - Node.js 18.0.0 or higher
 - npm or yarn
+- SQLite (included, no separate installation required)
 
 ### Installation
 
@@ -59,7 +60,7 @@ Previews and tests variations of templates with tools for analyzing procedural p
 Tests content with the D20 system in simulated gameplay to ensure quality and balance.
 
 ### Content Database
-Local storage for all templates and assets with organization and metadata management.
+Persistent storage for all templates and assets with organization and metadata management. Uses Prisma ORM with SQLite for efficient data storage and retrieval.
 
 ### Export Manager
 Packages content for use in games with multiple export formats and optimization options.
@@ -73,6 +74,7 @@ Comprehensive documentation is available in the `docs` directory:
 - [Task List](./docs/task-list.md): Comprehensive list of tasks for each development phase
 - [Project Guidelines](./docs/project-guidelines.md): Standards and best practices for development
 - [User Guides](./docs/user-guides/): Documentation for each feature
+- [Database Setup](./prisma/README.md): Information about the Prisma ORM setup and database schema
 
 ## Development
 
@@ -87,11 +89,18 @@ src/
 │   └── features/           # Feature-specific components
 ├── hooks/                  # Custom hooks
 ├── lib/                    # Utility functions and libraries
+│   └── prisma.ts           # Prisma client singleton
 ├── types/                  # TypeScript type definitions
 ├── styles/                 # Global styles and Tailwind config
 └── docs/                   # Documentation
     ├── user-guides/        # User guides for features
     └── ...
+prisma/                     # Prisma ORM configuration
+├── schema.prisma           # Database schema
+├── migrations/             # Database migrations
+└── dev.db                  # SQLite database file
+generated/                  # Generated code
+└── prisma/                 # Generated Prisma client
 ```
 
 ### Scripts
@@ -101,7 +110,18 @@ src/
 - `npm run start`: Start the production server
 - `npm run lint`: Run ESLint to check for code quality issues
 
-## Next.js Resources
+### Database Commands
 
+- `npx prisma studio`: Open Prisma Studio to view and edit the database
+- `npx prisma migrate dev`: Create and apply a new migration after schema changes
+- `npx prisma generate`: Generate the Prisma client after schema changes
+
+## Resources
+
+### Next.js
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+### Prisma
+- [Prisma Documentation](https://www.prisma.io/docs) - learn about Prisma ORM.
+- [Prisma with Next.js](https://www.prisma.io/nextjs) - best practices for using Prisma with Next.js.
