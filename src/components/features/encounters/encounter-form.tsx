@@ -25,7 +25,7 @@ interface EncounterFormProps {
   isLoading?: boolean;
 }
 
-export function EncounterForm({
+export const EncounterForm = ({
   defaultValues = {
     name: '',
     description: '',
@@ -36,7 +36,7 @@ export function EncounterForm({
   encounterId,
   onSubmit,
   isLoading = false,
-}: EncounterFormProps) {
+}: EncounterFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -236,4 +236,4 @@ Variables:
       </Form>
     </div>
   );
-}
+};

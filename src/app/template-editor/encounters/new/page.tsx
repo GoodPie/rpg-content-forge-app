@@ -8,7 +8,7 @@ import { EncounterData } from '../types';
 /**
  * Page component for creating a new encounter
  */
-export default function NewEncounterPage() {
+const NewEncounterPage = () => {
   const handleSubmit = async (data: EncounterData) => {
     return await createEncounter(data);
   };
@@ -19,4 +19,6 @@ export default function NewEncounterPage() {
       <TemplateSyntaxHelp />
     </>
   );
-}
+};
+
+export default NewEncounterPage;

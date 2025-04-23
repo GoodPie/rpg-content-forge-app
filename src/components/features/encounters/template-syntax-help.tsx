@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * Reusable component for displaying template syntax help information
  */
-export function TemplateSyntaxHelp() {
+export const TemplateSyntaxHelp = () => {
   return (
     <div className="mt-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
       <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Template Syntax Help</h2>
@@ -45,4 +45,4 @@ export function TemplateSyntaxHelp() {
       </div>
     </div>
   );
-}
+};

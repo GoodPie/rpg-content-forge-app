@@ -1,12 +1,8 @@
 import { createEncounter, updateEncounter, getEncounter } from '../actions';
 import { prisma } from '@/lib/prisma';
-import { v4 as uuidv4 } from 'uuid';
 import { EncounterData } from '../types';
 
-// Mock the uuid module
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mocked-uuid')
-}));
+
 
 // Mock the prisma client
 jest.mock('@/lib/prisma', () => ({
@@ -29,7 +25,6 @@ describe('Encounter Actions', () => {
   };
 
   const mockEncounter = {
-    id: 'mocked-uuid',
     name: 'Test Encounter',
     description: 'A test encounter description',
     tags: 'test,encounter',
@@ -54,7 +49,6 @@ describe('Encounter Actions', () => {
       // Check that prisma.encounter.create was called with the correct data
       expect(prisma.encounter.create).toHaveBeenCalledWith({
         data: {
-          id: 'mocked-uuid',
           name: 'Test Encounter',
           description: 'A test encounter description',
           tags: 'test,encounter',

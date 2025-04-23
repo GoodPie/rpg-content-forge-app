@@ -9,7 +9,7 @@ import { EncounterData } from '../../types';
 /**
  * Page component for editing an existing encounter
  */
-export default function EditEncounterPage({ params }: { params: { id: string } }) {
+const EditEncounterPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [encounterData, setEncounterData] = useState<EncounterData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ export default function EditEncounterPage({ params }: { params: { id: string } }
 
   // Fetch encounter data when component mounts
   useEffect(() => {
-    async function loadEncounter() {
+    const loadEncounter = async () => {
       try {
         const result = await getEncounter(id);
 
@@ -37,7 +37,7 @@ export default function EditEncounterPage({ params }: { params: { id: string } }
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
         setLoading(false);
       }
-    }
+    };
 
     loadEncounter();
   }, [id]);
@@ -75,4 +75,6 @@ export default function EditEncounterPage({ params }: { params: { id: string } }
       <TemplateSyntaxHelp />
     </>
   );
-}
+};
+
+export default EditEncounterPage;
