@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import {Button} from "@/components/ui/button";
 
 export default function EncountersPage() {
   // This would normally come from a database or API
   const encounterTemplates: EncounterTemplate[] = [];
-  
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -13,20 +14,22 @@ export default function EncountersPage() {
             Create and manage interactive scenarios with text, options, and outcomes.
           </p>
         </div>
-        <Link
-          href="/template-editor/encounters/new"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          New Encounter
-        </Link>
+
+        <Button asChild>
+          <Link href="/template-editor/encounters/new">
+            New Encounter
+          </Link>
+        </Button>
+
       </div>
-      
+
       {encounterTemplates.length > 0 ? (
         <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {encounterTemplates.map((template) => (
               <li key={template.id}>
-                <Link href={`/template-editor/encounters/${template.id}`} className="block hover:bg-gray-50 dark:hover:bg-gray-700">
+                <Link href={`/template-editor/encounters/${template.id}`}
+                      className="block hover:bg-gray-50 dark:hover:bg-gray-700">
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -61,20 +64,19 @@ export default function EncountersPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Create your first encounter template to get started.
           </p>
-          <Link
-            href="/template-editor/encounters/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Create Encounter Template
-          </Link>
+          <Button asChild>
+            <Link href="/template-editor/encounters/new">
+              Create Encounter Template
+            </Link>
+          </Button>
         </div>
       )}
-      
+
       <div className="mt-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
         <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">About Encounter Templates</h2>
         <div className="prose dark:prose-invert max-w-none">
           <p>
-            Encounter templates define interactive scenarios that players can experience in your game. 
+            Encounter templates define interactive scenarios that players can experience in your game.
             They include descriptive text, options for player choices, and outcomes based on those choices.
           </p>
           <h3>Key Components:</h3>

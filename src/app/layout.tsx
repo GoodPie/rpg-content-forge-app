@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Content Creation Tool",
+  title: "RPG Content Forge",
   description: "A tool for creating, managing, and exporting modular content packs for text-based adventure games with a focus on procedural generation.",
   keywords: "content creation, procedural generation, text adventure, game development",
 };

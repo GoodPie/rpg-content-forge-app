@@ -6,7 +6,7 @@ describe('Home Page', () => {
 
   it('displays the title and description', () => {
     // Check that the title is displayed
-    cy.contains('h1', 'Content Creation Tool').should('be.visible');
+    cy.contains('h1', 'RPG Content Forge').should('be.visible');
     
     // Check that the description is displayed
     cy.contains('p', 'A comprehensive environment for developing procedurally generated content').should('be.visible');
@@ -100,7 +100,7 @@ describe('Home Page', () => {
     cy.viewport('iphone-x');
     
     // Check that the title is still visible
-    cy.contains('h1', 'Content Creation Tool').should('be.visible');
+    cy.contains('h1', 'RPG Content Forge').should('be.visible');
     
     // Check that the features are stacked in a single column
     cy.get('.grid-cols-1').should('exist');
@@ -109,12 +109,12 @@ describe('Home Page', () => {
     cy.viewport('ipad-2');
     
     // Check that the title is still visible
-    cy.contains('h1', 'Content Creation Tool').should('be.visible');
+    cy.contains('h1', 'RPG Content Forge').should('be.visible');
     
     // Test on desktop viewport
     cy.viewport(1280, 720);
     
     // Check that the title is still visible
-    cy.contains('h1', 'Content Creation Tool').should('be.visible');
+    cy.contains('h1', 'RPG Content Forge').should('be.visible');
   });
 });

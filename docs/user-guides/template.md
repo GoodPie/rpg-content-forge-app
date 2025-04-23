@@ -1,7 +1,7 @@
 # Feature Name User Guide
 
 ## Overview
-A brief description of the feature, its purpose, and how it fits into the overall Content Creation Tool.
+A brief description of the feature, its purpose, and how it fits into the overall RPG Content Forge.
 
 ## Getting Started
 Basic instructions for accessing and using the feature.

@@ -1,18 +1,21 @@
 import Link from "next/link";
+import {FeatureCard} from "@/components/ui/feature-card";
+import {PrincipleCard} from "@/components/ui/principle-card";
 
 export default function Home() {
   return (
-    <div className="max-w-5xl mx-auto">
+    <>
       <section className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Content Creation Tool
+          RPG Content Forge
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
           A comprehensive environment for developing procedurally generated content for text-based adventure games.
         </p>
         <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
           <p className="text-blue-800 dark:text-blue-200">
-            Create virtually unlimited unique player experiences with a small amount of authored content through procedural generation.
+            Create virtually unlimited unique player experiences with a small amount of authored content through
+            procedural generation.
           </p>
         </div>
       </section>
@@ -87,7 +90,9 @@ export default function Home() {
           Getting Started
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mb-4">
-          Select a feature from the sidebar to begin creating procedural content, or check out the documentation for more information.
+          Select a feature from the sidebar to begin creating procedural content, or check out the documentation for
+          more
+          information.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -104,30 +109,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </div>
-  );
-}
-
-function FeatureCard({ title, description, href }: { title: string; description: string; href: string }) {
-  return (
-    <Link href={href} className="block group">
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-          {title}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-400">{description}</p>
-      </div>
-    </Link>
-  );
-}
-
-function PrincipleCard({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-      <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">
-        {title}
-      </h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
-    </div>
+    </>
   );
 }
