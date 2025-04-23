@@ -1,103 +1,133 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="max-w-5xl mx-auto">
+      <section className="mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          Content Creation Tool
+        </h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+          A comprehensive environment for developing procedurally generated content for text-based adventure games.
+        </p>
+        <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+          <p className="text-blue-800 dark:text-blue-200">
+            Create virtually unlimited unique player experiences with a small amount of authored content through procedural generation.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Core Features
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard
+            title="Template Editor"
+            description="Create and edit procedural content templates with support for variables, conditions, and branching narratives."
+            href="/template-editor"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            title="Procedural Generator"
+            description="Preview and test variations of templates with tools for analyzing procedural potential."
+            href="/procedural-generator"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            title="Content Simulator"
+            description="Test content with the D20 system in simulated gameplay to ensure quality and balance."
+            href="/content-simulator"
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <FeatureCard
+            title="Content Database"
+            description="Store and organize all templates and assets with comprehensive metadata management."
+            href="/content-database"
+          />
+          <FeatureCard
+            title="Export Manager"
+            description="Package content for use in games with multiple export formats and optimization options."
+            href="/export-manager"
+          />
+        </div>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Core Principles
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <PrincipleCard
+            title="Procedurality"
+            description="All content is designed for maximum procedural variation"
+          />
+          <PrincipleCard
+            title="Modularity"
+            description="Content is organized in discrete, combinable packs"
+          />
+          <PrincipleCard
+            title="Extensibility"
+            description="The system can be expanded to support new content types"
+          />
+          <PrincipleCard
+            title="Usability"
+            description="Accessible for both technical and non-technical content creators"
+          />
+          <PrincipleCard
+            title="Portability"
+            description="Content packs can be exported in standard formats"
+          />
+          <PrincipleCard
+            title="Collaboration"
+            description="Support for team-based content development"
+          />
+        </div>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Getting Started
+        </h2>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          Select a feature from the sidebar to begin creating procedural content, or check out the documentation for more information.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/template-editor"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Start Creating
+          </Link>
+          <Link
+            href="/docs"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            View Documentation
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function FeatureCard({ title, description, href }: { title: string; description: string; href: string }) {
+  return (
+    <Link href={href} className="block group">
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
+        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          {title}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">{description}</p>
+      </div>
+    </Link>
+  );
+}
+
+function PrincipleCard({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+      <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">
+        {title}
+      </h3>
+      <p className="text-gray-600 dark:text-gray-400">{description}</p>
     </div>
   );
 }
