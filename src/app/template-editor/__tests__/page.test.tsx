@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import TemplateEditorPage from '../page';
+
 
 // Mock the next/link component
 jest.mock('next/link', () => {
