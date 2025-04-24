@@ -8,6 +8,7 @@
 export { useEncounters } from './use-encounters';
 export { useVariableLibraries, useSelectedVariableLibrary, useSelectedVariable } from './use-variables';
 export { useVariableLibrary } from './use-variable-library';
+export { useVariable } from './use-variable';
 
 // Form hooks
 export { useFormSubmission } from './use-form-submission';
