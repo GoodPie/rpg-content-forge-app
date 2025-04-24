@@ -24,6 +24,8 @@ export interface Variable {
   description?: string;
   libraryId: string;
   values: VariableValue[];
+  isKeyFeature?: boolean;
+  keyFeatureType?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -57,6 +59,8 @@ export interface VariableData {
   name: string;
   description?: string;
   libraryId: string;
+  isKeyFeature?: boolean;
+  keyFeatureType?: string;
 }
 
 /**

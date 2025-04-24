@@ -11,6 +11,7 @@ import {VariableLibrary} from '@/types/variables';
 import {createVariableLibrary, updateVariableLibrary} from '@/app/content-database/variables/actions';
 import {useFormSubmission} from '@/hooks';
 import {getFormTitle, getFormDescription, getSubmitButtonText, getSuccessMessage, getErrorMessage} from '@/lib/form-helpers';
+import {validateVariableLibraryForm} from '@/lib/form-validation';
 
 interface FormValues {
   name: string;
@@ -23,6 +24,12 @@ interface VariableLibraryFormProps {
   isEdit?: boolean;
 }
 
+/**
+ * Form component for creating and editing variable libraries
+ * 
+ * This component has been refactored to use the form validation utility
+ * for consistent validation across the application.
+ */
 export function VariableLibraryForm({library, isEdit = false}: Readonly<VariableLibraryFormProps>) {
   const router = useRouter();
 
@@ -35,26 +42,7 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     },
   });
 
-  // Validation function for the form
-  const validateForm = (data: FormValues) => {
-    if (!data.name.trim()) {
-      return { isValid: false, errorMessage: 'Name is required' };
-    }
-
-    if (!data.description.trim()) {
-      return { isValid: false, errorMessage: 'Description is required' };
-    }
-
-    if (data.name.length > 100) {
-      return { isValid: false, errorMessage: 'Name is too long' };
-    }
-
-    if (data.description.length > 500) {
-      return { isValid: false, errorMessage: 'Description is too long' };
-    }
-
-    return { isValid: true };
-  };
+  // Using the form validation utility
 
   // Using the form helpers for success and error messages
 
@@ -85,7 +73,7 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
       }
     },
     {
-      validationFn: validateForm,
+      validationFn: validateVariableLibraryForm,
       successMessage: getSuccessMessage(isEdit, 'The variable library has been created successfully.', 'The variable library has been updated successfully.'),
       errorMessage: getErrorMessage(isEdit, 'Failed to create library', 'Failed to update library'),
       redirectPath: getRedirectPath(),

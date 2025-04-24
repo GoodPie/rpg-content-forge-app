@@ -8,8 +8,10 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getVariableLibrary } from '@/app/content-database/variables/actions';
 import { VariableLibrary } from '@/types/variables';
+import { use } from 'react';
 
 export default function EditVariableLibraryPage({ params }: { params: { id: string } }) {
+  const unwrappedParams = use(params);
   const [library, setLibrary] = useState<VariableLibrary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,7 @@ export default function EditVariableLibraryPage({ params }: { params: { id: stri
 
       try {
         // Fetch the library
-        const response = await getVariableLibrary(params.id);
+        const response = await getVariableLibrary(unwrappedParams.id);
         if (response.success && response.data) {
           setLibrary(response.data);
         } else {
@@ -36,7 +38,7 @@ export default function EditVariableLibraryPage({ params }: { params: { id: stri
     };
 
     fetchData();
-  }, [params.id]);
+  }, [unwrappedParams.id]);
 
   if (isLoading) {
     return (
@@ -56,7 +58,7 @@ export default function EditVariableLibraryPage({ params }: { params: { id: stri
       <div className="container mx-auto py-6">
         <div className="mb-6">
           <Button variant="ghost" size="sm" asChild className="mb-2">
-            <Link href={`/content-database/variables/${params.id}`}>
+            <Link href={`/content-database/variables/${unwrappedParams.id}`}>
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back to Library
             </Link>
@@ -75,7 +77,7 @@ export default function EditVariableLibraryPage({ params }: { params: { id: stri
     <div className="container mx-auto py-6">
       <div className="mb-6">
         <Button variant="ghost" size="sm" asChild className="mb-2">
-          <Link href={`/content-database/variables/${params.id}`}>
+          <Link href={`/content-database/variables/${unwrappedParams.id}`}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Library
           </Link>

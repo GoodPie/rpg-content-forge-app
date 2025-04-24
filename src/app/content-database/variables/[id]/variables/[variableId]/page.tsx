@@ -12,8 +12,10 @@ import { toast } from "sonner";
 import { getVariableLibrary, deleteVariable } from '@/app/content-database/variables/actions';
 import { VariableLibrary, Variable, VariableValue } from '@/types/variables';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { use } from 'react';
 
 export default function VariablePage({ params }: { params: { id: string; variableId: string } }) {
+  const unwrappedParams = use(params);
   const router = useRouter();
   const [library, setLibrary] = useState<VariableLibrary | null>(null);
   const [variable, setVariable] = useState<Variable | null>(null);
@@ -28,12 +30,12 @@ export default function VariablePage({ params }: { params: { id: string; variabl
 
       try {
         // Fetch the library which includes all variables
-        const response = await getVariableLibrary(params.id);
+        const response = await getVariableLibrary(unwrappedParams.id);
         if (response.success && response.data) {
           setLibrary(response.data);
-          
+
           // Find the specific variable in the library
-          const foundVariable = response.data.variables.find(v => v.id === params.variableId);
+          const foundVariable = response.data.variables.find(v => v.id === unwrappedParams.variableId);
           if (foundVariable) {
             setVariable(foundVariable);
           } else {
@@ -51,14 +53,14 @@ export default function VariablePage({ params }: { params: { id: string; variabl
     };
 
     fetchData();
-  }, [params.id, params.variableId]);
+  }, [unwrappedParams.id, unwrappedParams.variableId]);
 
   const handleDeleteVariable = async () => {
     try {
-      const response = await deleteVariable(params.variableId);
+      const response = await deleteVariable(unwrappedParams.variableId);
       if (response.success) {
         toast.success('The variable has been deleted successfully.');
-        router.push(`/content-database/variables/${params.id}`);
+        router.push(`/content-database/variables/${unwrappedParams.id}`);
         router.refresh();
       } else {
         toast.error(response.error || 'Failed to delete variable');
@@ -87,7 +89,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
       <div className="container mx-auto py-6">
         <div className="mb-6">
           <Button variant="ghost" size="sm" asChild className="mb-2">
-            <Link href={`/content-database/variables/${params.id}`}>
+            <Link href={`/content-database/variables/${unwrappedParams.id}`}>
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back to Library
             </Link>
@@ -106,7 +108,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
     <div className="container mx-auto py-6">
       <div className="mb-6">
         <Button variant="ghost" size="sm" asChild className="mb-2">
-          <Link href={`/content-database/variables/${params.id}`}>
+          <Link href={`/content-database/variables/${unwrappedParams.id}`}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back to Library
           </Link>
@@ -120,7 +122,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" asChild>
-              <Link href={`/content-database/variables/${params.id}/variables/${variable.id}/edit`}>
+              <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Variable
               </Link>
@@ -206,7 +208,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Values</h2>
             <Button asChild>
-              <Link href={`/content-database/variables/${params.id}/variables/${variable.id}/values/new`}>
+              <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/values/new`}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Value
               </Link>
@@ -221,7 +223,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
                   Add your first value to make this variable useful.
                 </p>
                 <Button asChild>
-                  <Link href={`/content-database/variables/${params.id}/variables/${variable.id}/values/new`}>
+                  <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/values/new`}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add Value
                   </Link>
@@ -247,7 +249,7 @@ export default function VariablePage({ params }: { params: { id: string; variabl
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/content-database/variables/${params.id}/variables/${variable.id}/values/${value.id}/edit`}>
+                          <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/values/${value.id}/edit`}>
                             Edit
                           </Link>
                         </Button>

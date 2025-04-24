@@ -1,31 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronLeft, Edit, Plus, Trash2 } from 'lucide-react';
+import React from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {Skeleton} from '@/components/ui/skeleton';
+import {ChevronLeft, Edit, Plus, Trash2} from 'lucide-react';
 import Link from 'next/link';
-import { deleteVariableLibrary } from '@/app/content-database/variables/actions';
-import { Variable } from '@/types/variables';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { useVariableLibrary, useTabs, useEntityDelete } from '@/hooks';
+import {deleteVariableLibrary} from '@/app/content-database/variables/actions';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
+import {useVariableLibrary, useTabs, useEntityDelete} from '@/hooks';
 
-export default function VariableLibraryPage({ params }: { params: { id: string } }) {
+export default function VariableLibraryPage({params}: { params: { id: string } }) {
   const router = useRouter();
-  const [selectedVariable, setSelectedVariable] = useState<Variable | null>(null);
+
+  // Unwrap the params Promise
+  const unwrappedParams = React.use(params);
 
   // Use the variable library hook to fetch and manage the library data
-  const { library, isLoading, error } = useVariableLibrary(params.id);
+  const {library, isLoading, error} = useVariableLibrary(unwrappedParams.id);
 
   // Use the tabs hook to manage the active tab
-  const { activeTab, handleTabChange } = useTabs('overview');
+  const {activeTab, handleTabChange} = useTabs('overview');
 
   // Use the entity delete hook to handle library deletion
-  const { handleDelete } = useEntityDelete(
-    () => deleteVariableLibrary(params.id),
+  const {handleDelete, isDeleting: _isDeleting} = useEntityDelete(
+    () => deleteVariableLibrary(unwrappedParams.id),
     {
       successMessage: 'The variable library has been deleted successfully.',
       errorMessage: 'Failed to delete library',
@@ -37,11 +48,11 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
     return (
       <div className="container mx-auto py-6">
         <div className="mb-6">
-          <Skeleton className="h-10 w-40 mb-2" />
-          <Skeleton className="h-8 w-64 mb-2" />
-          <Skeleton className="h-4 w-96" />
+          <Skeleton className="h-10 w-40 mb-2"/>
+          <Skeleton className="h-8 w-64 mb-2"/>
+          <Skeleton className="h-4 w-96"/>
         </div>
-        <Skeleton className="h-[500px] w-full rounded-lg" />
+        <Skeleton className="h-[500px] w-full rounded-lg"/>
       </div>
     );
   }
@@ -52,7 +63,7 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
         <div className="mb-6">
           <Button variant="ghost" size="sm" asChild className="mb-2">
             <Link href="/content-database/variables">
-              <ChevronLeft className="mr-2 h-4 w-4" />
+              <ChevronLeft className="mr-2 h-4 w-4"/>
               Back to Libraries
             </Link>
           </Button>
@@ -71,7 +82,7 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
       <div className="mb-6">
         <Button variant="ghost" size="sm" asChild className="mb-2">
           <Link href="/content-database/variables">
-            <ChevronLeft className="mr-2 h-4 w-4" />
+            <ChevronLeft className="mr-2 h-4 w-4"/>
             Back to Libraries
           </Link>
         </Button>
@@ -83,16 +94,20 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href={`/content-database/variables/${params.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Library
-              </Link>
-            </Button>
+
+            <Link href={`/content-database/variables/${unwrappedParams.id}/edit`}>
+              <Button variant="outline" size="sm" asChild>
+                <span>
+                  <Edit className="h-4 w-4"/>
+                  Edit Library
+                </span>
+              </Button>
+            </Link>
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <Trash2 className="h-4 w-4"/>
                   Delete Library
                 </Button>
               </AlertDialogTrigger>
@@ -142,8 +157,8 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
                 <h3 className="text-sm font-medium">Variables</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   This library contains {library.variables.length} variables with a total of {
-                    library.variables.reduce((total, variable) => total + variable.values.length, 0)
-                  } possible values.
+                  library.variables.reduce((total, variable) => total + variable.values.length, 0)
+                } possible values.
                 </p>
               </div>
               <div>
@@ -165,12 +180,16 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
         <TabsContent value="variables" className="mt-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Variables</h2>
-            <Button asChild>
-              <Link href={`/content-database/variables/${params.id}/variables/new`}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Variable
-              </Link>
-            </Button>
+
+            <Link href={`/content-database/variables/${unwrappedParams.id}/variables/new`}>
+              <Button asChild>
+                <span>
+                  <Plus className="h-4 w-4"/>
+                  Add Variable
+                </span>
+              </Button>
+            </Link>
+
           </div>
 
           {library.variables.length === 0 ? (
@@ -181,8 +200,8 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
                   Add your first variable to start building procedural content.
                 </p>
                 <Button asChild>
-                  <Link href={`/content-database/variables/${params.id}/variables/new`}>
-                    <Plus className="mr-2 h-4 w-4" />
+                  <Link href={`/content-database/variables/${unwrappedParams.id}/variables/new`}>
+                    <Plus className="mr-2 h-4 w-4"/>
                     Add Variable
                   </Link>
                 </Button>
@@ -201,11 +220,27 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
                         </CardDescription>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/content-database/variables/${params.id}/variables/${variable.id}`}>
+                        <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}`}>
+                          <Button variant="ghost" size="sm" asChild>
                             View
-                          </Link>
-                        </Button>
+                          </Button>
+                        </Link>
+                        <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/edit`}>
+                          <Button variant="outline" size="sm" asChild>
+                            <span>
+                              <Edit className="mr-1 h-3 w-3" />
+                              Edit
+                            </span>
+                          </Button>
+                        </Link>
+                        <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/values/new`}>
+                          <Button variant="outline" size="sm" asChild>
+                            <span>
+                              <Plus className="mr-1 h-3 w-3" />
+                              Add Value
+                            </span>
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </CardHeader>
@@ -285,7 +320,7 @@ export default function VariableLibraryPage({ params }: { params: { id: string }
                 <pre className="bg-muted p-2 rounded-md mt-2 text-sm font-mono whitespace-pre-wrap">
                   {library.variables.length > 0 ? (
                     `As I walked through the ${"{{"}<span className="text-blue-500">${
-                      library.variables.find(v => v.name.includes('forest') || v.name.includes('environment'))?.name || 
+                      library.variables.find(v => v.name.includes('forest') || v.name.includes('environment'))?.name ||
                       library.variables[0].name
                     }</span>{"}}"}...`
                   ) : (

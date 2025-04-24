@@ -1,18 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { VariableForm } from '@/components/features/variables/variable-form';
+import { VariableValueForm } from '@/components/features/variables/variable-value-form';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getVariableLibrary } from '@/app/content-database/variables/actions';
-import { Variable } from '@/types/variables';
+import { VariableValue } from '@/types/variables';
 import { use } from 'react';
 
-export default function EditVariablePage({ params }: { params: { id: string; variableId: string } }) {
+export default function EditVariableValuePage({ params }: { params: { id: string; variableId: string; valueId: string } }) {
   const unwrappedParams = use(params);
-  const [variable, setVariable] = useState<Variable | null>(null);
+  const [value, setValue] = useState<VariableValue | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +28,13 @@ export default function EditVariablePage({ params }: { params: { id: string; var
           // Find the specific variable in the library
           const foundVariable = response.data.variables.find(v => v.id === unwrappedParams.variableId);
           if (foundVariable) {
-            setVariable(foundVariable);
+            // Find the specific value in the variable
+            const foundValue = foundVariable.values.find(v => v.id === unwrappedParams.valueId);
+            if (foundValue) {
+              setValue(foundValue);
+            } else {
+              setError('Value not found in this variable');
+            }
           } else {
             setError('Variable not found in this library');
           }
@@ -44,7 +50,7 @@ export default function EditVariablePage({ params }: { params: { id: string; var
     };
 
     fetchData();
-  }, [unwrappedParams.id, unwrappedParams.variableId]);
+  }, [unwrappedParams.id, unwrappedParams.variableId, unwrappedParams.valueId]);
 
   if (isLoading) {
     return (
@@ -59,7 +65,7 @@ export default function EditVariablePage({ params }: { params: { id: string; var
     );
   }
 
-  if (error || !variable) {
+  if (error || !value) {
     return (
       <div className="container mx-auto py-6">
         <div className="mb-6">
@@ -72,7 +78,7 @@ export default function EditVariablePage({ params }: { params: { id: string; var
         </div>
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 rounded-md">
           <p className="text-red-600 dark:text-red-400">
-            {error || 'Variable not found'}
+            {error || 'Value not found'}
           </p>
         </div>
       </div>
@@ -88,15 +94,16 @@ export default function EditVariablePage({ params }: { params: { id: string; var
             Back to Variable
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight">Edit Variable</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Edit Value</h1>
         <p className="text-muted-foreground">
-          Update the details of this variable
+          Update this variable value
         </p>
       </div>
 
       <div className="max-w-2xl mx-auto">
-        <VariableForm 
-          variable={variable} 
+        <VariableValueForm 
+          value={value} 
+          variableId={unwrappedParams.variableId} 
           libraryId={unwrappedParams.id} 
           isEdit={true} 
         />

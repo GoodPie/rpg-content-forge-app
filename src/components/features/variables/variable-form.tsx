@@ -8,14 +8,21 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {Variable} from '@/types/variables';
-import {createVariable, updateVariable} from '@/app/content-database/variables/actions';
+import {createVariable, updateVariable, createVariableValue, deleteVariableValue} from '@/app/content-database/variables/actions';
 import {useFormSubmission} from '@/hooks';
 import {getFormTitle, getFormDescription, getSubmitButtonText, getSuccessMessage, getErrorMessage} from '@/lib/form-helpers';
+import {KeyFeatureSection} from './key-feature-section';
+import {VariableUsageInfo} from './variable-usage-info';
+import {VariableValuesSection} from './variable-values-section';
+import {validateVariableForm} from '@/lib/form-validation';
 
 interface FormValues {
   name: string;
   description?: string;
   libraryId: string;
+  values?: any[];
+  isKeyFeature?: boolean;
+  keyFeatureType?: string;
 }
 
 interface VariableFormProps {
@@ -24,7 +31,13 @@ interface VariableFormProps {
   isEdit?: boolean;
 }
 
-export function VariableForm({variable, libraryId, isEdit = false}: VariableFormProps) {
+/**
+ * Form component for creating and editing variables
+ * 
+ * This component has been refactored to use smaller, more focused components
+ * and custom hooks for managing form state and validation.
+ */
+export function VariableForm({variable, libraryId, isEdit = false}: Readonly<VariableFormProps>) {
   const router = useRouter();
 
   // Initialize form with default values or existing variable data
@@ -33,32 +46,15 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
       name: variable?.name ?? '',
       description: variable?.description ?? '',
       libraryId: libraryId,
+      values: variable?.values ? variable.values.map(value => ({
+        text: value.text,
+        condition: value.condition || '',
+        weight: value.weight,
+      })) : [],
+      isKeyFeature: variable?.isKeyFeature ?? false,
+      keyFeatureType: variable?.keyFeatureType ?? '',
     },
   });
-
-  // Validation function for the form
-  const validateForm = (data: FormValues) => {
-    if (!data.name.trim()) {
-      return { isValid: false, errorMessage: "Name is required" };
-    }
-
-    if (data.name.length > 50) {
-      return { isValid: false, errorMessage: "Name is too long" };
-    }
-
-    // Validate name format (must start with a letter and contain only letters, numbers, and underscores)
-    if (!data.name.match(/^[a-zA-Z][a-zA-Z0-9_]*$/)) {
-      return { isValid: false, errorMessage: "Name must start with a letter and contain only letters, numbers, and underscores" };
-    }
-
-    if (!data.libraryId) {
-      return { isValid: false, errorMessage: "Library ID is required" };
-    }
-
-    return { isValid: true };
-  };
-
-  // Get success and error messages using the form helpers
 
   // Helper function to get the redirect path
   const getRedirectPath = () => {
@@ -75,19 +71,78 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     };
   };
 
-  // Use the form submission hook
-  const { handleSubmit, isSubmitting } = useFormSubmission(
-    async (data: FormValues) => {
+  // Function to create or update a variable and its values
+  const createOrUpdateVariableWithValues = async (data: FormValues) => {
+    try {
+      // Step 1: Create or update the variable
+      const variableData = {
+        name: data.name,
+        description: data.description,
+        libraryId: data.libraryId,
+        isKeyFeature: data.isKeyFeature,
+        keyFeatureType: data.isKeyFeature ? data.keyFeatureType : undefined,
+      };
+
+      let variableResponse;
       if (isEdit && variable) {
         // Update existing variable
-        return await updateVariable(variable.id, data);
+        variableResponse = await updateVariable(variable.id, variableData);
       } else {
         // Create new variable
-        return await createVariable(data);
+        variableResponse = await createVariable(variableData);
       }
-    },
+
+      if (!variableResponse.success || !variableResponse.data) {
+        throw new Error(variableResponse.error || 'Failed to create/update variable');
+      }
+
+      const variableId = variableResponse.data.id;
+
+      // Step 2: Handle values
+      if (data.values && data.values.length > 0) {
+        // If editing, get existing values to determine which ones to delete
+        const existingValueIds = isEdit && variable ? variable.values.map(v => v.id) : [];
+        const newValueIds: string[] = [];
+
+        // Create each value
+        for (const valueData of data.values) {
+          const valueResponse = await createVariableValue({
+            text: valueData.text,
+            condition: valueData.condition,
+            weight: valueData.weight,
+            variableId: variableId,
+          });
+
+          if (valueResponse.success && valueResponse.data) {
+            newValueIds.push(valueResponse.data.id);
+          }
+        }
+
+        // If editing, delete values that no longer exist
+        if (isEdit && variable) {
+          for (const existingId of existingValueIds) {
+            if (!newValueIds.includes(existingId)) {
+              await deleteVariableValue(existingId);
+            }
+          }
+        }
+      }
+
+      return variableResponse;
+    } catch (error) {
+      console.error('Error creating/updating variable with values:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
+      };
+    }
+  };
+
+  // Use the form submission hook
+  const { handleSubmit, isSubmitting } = useFormSubmission(
+    createOrUpdateVariableWithValues,
     {
-      validationFn: validateForm,
+      validationFn: validateVariableForm,
       successMessage: getSuccessMessage(isEdit, "Variable created successfully", "Variable updated successfully"),
       errorMessage: getErrorMessage(isEdit, "Failed to create variable", "Failed to update variable"),
       redirectPath: getRedirectPath(),
@@ -97,8 +152,6 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
   const onSubmit = (data: FormValues) => {
     handleSubmit(data);
   };
-
-  // Using the form helpers for UI text
 
   return (
     <Card>
@@ -147,13 +200,14 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
               )}
             />
 
-            <div className="bg-muted p-4 rounded-md">
-              <h3 className="text-sm font-medium mb-2">Variable Usage</h3>
-              <p className="text-sm text-muted-foreground">
-                In templates, use this variable with: <code
-                className="bg-background px-1 py-0.5 rounded">{"{{"}{form.watch('name') || 'variable_name'}{"}}"}</code>
-              </p>
-            </div>
+            {/* Key Feature Section */}
+            <KeyFeatureSection form={form} />
+
+            {/* Variable Usage Info */}
+            <VariableUsageInfo form={form} />
+
+            {/* Variable Values Section */}
+            <VariableValuesSection form={form} />
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button
