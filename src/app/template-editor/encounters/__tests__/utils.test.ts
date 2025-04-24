@@ -61,7 +61,7 @@ describe('Encounter Utility Functions', () => {
       };
 
       const processed = processEncounterData(dataWithWhitespace);
-      
+
       expect(processed.name).toBe('Test Encounter');
       expect(processed.description).toBe('A test description');
       expect(processed.content).toBe('Test content');
@@ -76,7 +76,7 @@ describe('Encounter Utility Functions', () => {
       };
 
       const processed = processEncounterData(dataWithMesyTags);
-      
+
       expect(processed.tags).toBe('tag1,tag2,tag3,tag4');
     });
 
@@ -89,7 +89,7 @@ describe('Encounter Utility Functions', () => {
       };
 
       const processed = processEncounterData(dataWithEmptyTags);
-      
+
       expect(processed.tags).toBe('');
     });
 
@@ -102,7 +102,7 @@ describe('Encounter Utility Functions', () => {
       };
 
       const processed = processEncounterData(dataWithWhitespaceTags);
-      
+
       expect(processed.tags).toBe('');
     });
   });
@@ -111,28 +111,28 @@ describe('Encounter Utility Functions', () => {
     it('should parse comma-separated tags into an array', () => {
       const tagsString = 'tag1,tag2,tag3';
       const result = parseTags(tagsString);
-      
+
       expect(result).toEqual(['tag1', 'tag2', 'tag3']);
     });
 
     it('should filter out empty tags', () => {
       const tagsString = 'tag1,,tag2,';
       const result = parseTags(tagsString);
-      
+
       expect(result).toEqual(['tag1', 'tag2']);
     });
 
     it('should return an empty array for empty string', () => {
       const result = parseTags('');
-      
+
       expect(result).toEqual([]);
     });
 
     it('should handle whitespace in tags', () => {
       const tagsString = 'tag 1,tag 2, tag 3';
       const result = parseTags(tagsString);
-      
-      expect(result).toEqual(['tag 1', 'tag 2', ' tag 3']);
+
+      expect(result).toEqual(['tag 1', 'tag 2', 'tag 3']);
     });
   });
 });

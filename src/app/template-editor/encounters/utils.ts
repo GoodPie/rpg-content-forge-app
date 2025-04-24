@@ -39,6 +39,7 @@ export const processEncounterData = (data: EncounterData) => {
     name: data.name.trim(),
     description: data.description.trim(),
     content: data.content.trim(),
+    tags: data.tags ? parseTags(data.tags).join(',') : '',
   };
 };
 

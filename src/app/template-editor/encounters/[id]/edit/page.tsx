@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EncounterForm } from '@/components/features/encounters/encounter-form';
 import { TemplateSyntaxHelp } from '@/components/features/encounters/template-syntax-help';
 import { updateEncounter, getEncounter } from '../../actions';
@@ -10,8 +10,9 @@ import { tagsToString } from '../../utils';
 /**
  * Page component for editing an existing encounter
  */
-const EditEncounterPage = ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const EditEncounterPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const resolvedParams = React.use(params);
+  const { id } = resolvedParams;
   const [encounterData, setEncounterData] = useState<EncounterData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

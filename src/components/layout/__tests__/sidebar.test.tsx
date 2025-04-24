@@ -24,10 +24,10 @@ describe('Sidebar Component', () => {
   it('renders template editor navigation when on template editor page', () => {
     (usePathname as jest.Mock).mockReturnValue('/template-editor');
     render(<Sidebar />);
-    
+
     // Check that the template editor heading is rendered
     expect(screen.getByText('Template Editor')).toBeInTheDocument();
-    
+
     // Check that template editor navigation links are rendered
     expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(screen.getByText('Encounters')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('Sidebar Component', () => {
     expect(screen.getByText('NPCs')).toBeInTheDocument();
     expect(screen.getByText('Items')).toBeInTheDocument();
     expect(screen.getByText('Quests')).toBeInTheDocument();
-    
+
     // Check that other feature headings are not rendered
     expect(screen.queryByText('Procedural Generator')).not.toBeInTheDocument();
     expect(screen.queryByText('Content Simulator')).not.toBeInTheDocument();
@@ -47,17 +47,17 @@ describe('Sidebar Component', () => {
   it('renders procedural generator navigation when on procedural generator page', () => {
     (usePathname as jest.Mock).mockReturnValue('/procedural-generator');
     render(<Sidebar />);
-    
+
     // Check that the procedural generator heading is rendered
     expect(screen.getByText('Procedural Generator')).toBeInTheDocument();
-    
+
     // Check that procedural generator navigation links are rendered
     expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(screen.getByText('Text Variation')).toBeInTheDocument();
     expect(screen.getByText('Structural Variation')).toBeInTheDocument();
     expect(screen.getByText('Conditional Logic')).toBeInTheDocument();
     expect(screen.getByText('Seed Explorer')).toBeInTheDocument();
-    
+
     // Check that other feature headings are not rendered
     expect(screen.queryByText('Template Editor')).not.toBeInTheDocument();
     expect(screen.queryByText('Content Simulator')).not.toBeInTheDocument();
@@ -69,17 +69,17 @@ describe('Sidebar Component', () => {
   it('renders content simulator navigation when on content simulator page', () => {
     (usePathname as jest.Mock).mockReturnValue('/content-simulator');
     render(<Sidebar />);
-    
+
     // Check that the content simulator heading is rendered
     expect(screen.getByText('Content Simulator')).toBeInTheDocument();
-    
+
     // Check that content simulator navigation links are rendered
     expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(screen.getByText('Character Sheet')).toBeInTheDocument();
     expect(screen.getByText('Inventory')).toBeInTheDocument();
     expect(screen.getByText('Journal')).toBeInTheDocument();
     expect(screen.getByText('Run Simulation')).toBeInTheDocument();
-    
+
     // Check that other feature headings are not rendered
     expect(screen.queryByText('Template Editor')).not.toBeInTheDocument();
     expect(screen.queryByText('Procedural Generator')).not.toBeInTheDocument();
@@ -91,17 +91,17 @@ describe('Sidebar Component', () => {
   it('renders content database navigation when on content database page', () => {
     (usePathname as jest.Mock).mockReturnValue('/content-database');
     render(<Sidebar />);
-    
+
     // Check that the content database heading is rendered
     expect(screen.getByText('Content Database')).toBeInTheDocument();
-    
+
     // Check that content database navigation links are rendered
     expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(screen.getByText('Content Packs')).toBeInTheDocument();
     expect(screen.getByText('Templates')).toBeInTheDocument();
     expect(screen.getByText('Variable Libraries')).toBeInTheDocument();
     expect(screen.getByText('Import Content')).toBeInTheDocument();
-    
+
     // Check that other feature headings are not rendered
     expect(screen.queryByText('Template Editor')).not.toBeInTheDocument();
     expect(screen.queryByText('Procedural Generator')).not.toBeInTheDocument();
@@ -113,17 +113,17 @@ describe('Sidebar Component', () => {
   it('renders export manager navigation when on export manager page', () => {
     (usePathname as jest.Mock).mockReturnValue('/export-manager');
     render(<Sidebar />);
-    
+
     // Check that the export manager heading is rendered
     expect(screen.getByText('Export Manager')).toBeInTheDocument();
-    
+
     // Check that export manager navigation links are rendered
     expect(screen.getByText('Overview')).toBeInTheDocument();
     expect(screen.getByText('JSON Export')).toBeInTheDocument();
     expect(screen.getByText('SQLite Export')).toBeInTheDocument();
     expect(screen.getByText('Binary Export')).toBeInTheDocument();
     expect(screen.getByText('Custom Format')).toBeInTheDocument();
-    
+
     // Check that other feature headings are not rendered
     expect(screen.queryByText('Template Editor')).not.toBeInTheDocument();
     expect(screen.queryByText('Procedural Generator')).not.toBeInTheDocument();
@@ -135,17 +135,17 @@ describe('Sidebar Component', () => {
   it('renders general navigation when not on any feature page', () => {
     (usePathname as jest.Mock).mockReturnValue('/');
     render(<Sidebar />);
-    
+
     // Check that the navigation heading is rendered
     expect(screen.getByText('Navigation')).toBeInTheDocument();
-    
+
     // Check that main navigation links are rendered
     expect(screen.getByText('Template Editor')).toBeInTheDocument();
     expect(screen.getByText('Procedural Generator')).toBeInTheDocument();
     expect(screen.getByText('Content Simulator')).toBeInTheDocument();
     expect(screen.getByText('Content Database')).toBeInTheDocument();
     expect(screen.getByText('Export Manager')).toBeInTheDocument();
-    
+
     // Check that feature-specific headings are not rendered
     expect(screen.queryByText('Overview')).not.toBeInTheDocument();
     expect(screen.queryByText('Encounters')).not.toBeInTheDocument();
@@ -158,32 +158,32 @@ describe('Sidebar Component', () => {
   it('highlights the active link in template editor navigation', () => {
     (usePathname as jest.Mock).mockReturnValue('/template-editor/encounters');
     render(<Sidebar />);
-    
+
     // Find all navigation links
     const links = screen.getAllByRole('link');
-    
+
     // Find the Encounters link (should be active)
     const activeLink = links.find(link => link.textContent === 'Encounters');
-    
+
     // Check that the active link has the active class
-    expect(activeLink).toHaveClass(' text-(--sidebar-foreground/70) hover:bg-(--sidebar-accent/50) hover:text-(--sidebar-foreground)');
+    expect(activeLink).toHaveClass('bg-(--sidebar-accent) text-(--sidebar-foreground)');
   });
 
   it('highlights the active link in general navigation', () => {
     (usePathname as jest.Mock).mockReturnValue('/');
     render(<Sidebar />);
-    
+
     // Mock a different path to test general navigation with an active link
     (usePathname as jest.Mock).mockReturnValue('/content-simulator');
     render(<Sidebar />);
-    
+
     // Find all navigation links in the sidebar
     const links = screen.getAllByRole('link');
-    
+
     // Find the Content Simulator link (should be active)
     const activeLink = links.find(link => link.textContent === 'Content Simulator');
-    
+
     // Check that the active link has the active class
-    expect(activeLink).toHaveClass('bg-(--sidebar-accent)');
+    expect(activeLink).toHaveClass('bg-(--sidebar-accent) text-(--sidebar-foreground)');
   });
 });

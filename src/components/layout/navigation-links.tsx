@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 export type NavigationItem = {
   href: string;
@@ -69,7 +68,7 @@ interface DesktopNavLinkProps {
   isActive: boolean;
 }
 
-export function DesktopNavLink({ item, isActive }: DesktopNavLinkProps) {
+export function DesktopNavLink({ item, isActive }: Readonly<DesktopNavLinkProps>) {
   return (
     <Link 
       href={item.href} 
@@ -89,7 +88,7 @@ interface MobileNavLinkProps {
   isActive: boolean;
 }
 
-export function MobileNavLink({ item, isActive }: MobileNavLinkProps) {
+export function MobileNavLink({ item, isActive }: Readonly<MobileNavLinkProps>) {
   return (
     <Link
       href={item.href}
@@ -109,7 +108,7 @@ interface SidebarNavLinkProps {
   isActive: boolean;
 }
 
-export function SidebarNavLink({ item, isActive }: SidebarNavLinkProps) {
+export function SidebarNavLink({ item, isActive }: Readonly<SidebarNavLinkProps>) {
   return (
     <Link 
       href={item.href}

@@ -45,3 +45,4 @@ generated/prisma/
 .idea/
 
 cypress/downloads/
+/cypress/screenshots/

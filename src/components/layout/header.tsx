@@ -22,7 +22,7 @@ export function Header() {
     <header className="bg-(--background) shadow-sm">
       <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16">
-          <div className="flex justify-start">
+          <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-(--foreground)">
                 RPG Content Forge
@@ -42,9 +42,9 @@ export function Header() {
           </nav>
 
           {/* Mobile menu button */}
-          <div className="flex items-center md:hidden">
+          <div className="flex ms-auto items-center md:hidden">
             <Button
-              className="inline-flex items-center justify-center p-2 rounded-md text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent)"
+              className="inline-flex items-center justify-center p-2 rounded-md text-(--muted-foreground) bg-(--primary) hover:text-(--foreground) hover:bg-(--accent)"
               aria-controls="mobile-menu"
               aria-expanded="false"
               onClick={toggleMenu}
