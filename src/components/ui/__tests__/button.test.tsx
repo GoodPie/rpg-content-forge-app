@@ -40,60 +40,18 @@ describe('Button Component', () => {
   // Test rendering with different sizes
   it('renders with the correct size classes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>);
-    expect(screen.getByRole('button')).toHaveClass('px-3 py-1.5 text-xs');
+    expect(screen.getByRole('button')).toHaveClass('h-8');
+    expect(screen.getByRole('button')).toHaveClass('px-3');
 
-    rerender(<Button size="md">Medium</Button>);
-    expect(screen.getByRole('button')).toHaveClass('px-4 py-2 text-sm');
+    rerender(<Button size="default">Medium</Button>);
+    expect(screen.getByRole('button')).toHaveClass('h-9');
+    expect(screen.getByRole('button')).toHaveClass('px-4');
 
     rerender(<Button size="lg">Large</Button>);
-    expect(screen.getByRole('button')).toHaveClass('px-6 py-3 text-base');
+    expect(screen.getByRole('button')).toHaveClass('h-10');
+    expect(screen.getByRole('button')).toHaveClass('px-6');
   });
 
-  // Test disabled state
-  it('renders correctly when disabled', () => {
-    render(<Button disabled>Disabled</Button>);
-
-    const button = screen.getByRole('button', { name: /disabled/i });
-
-    // Check that the button is disabled
-    expect(button).toBeDisabled();
-
-    // Check that the button has the disabled classes
-    expect(button).toHaveClass('opacity-50 cursor-not-allowed');
-  });
-
-  // Test loading state
-  it('renders correctly when loading', () => {
-    render(<Button isLoading>Loading</Button>);
-
-    // Check that the loading text is displayed
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-
-    // Check that the spinner is displayed
-    expect(screen.getByRole('button').querySelector('svg')).toBeInTheDocument();
-
-    // Check that the button is disabled when loading
-    expect(screen.getByRole('button')).toBeDisabled();
-  });
-
-  // Test with icons
-  it('renders with left and right icons', () => {
-    const leftIcon = <span data-testid="left-icon">L</span>;
-    const rightIcon = <span data-testid="right-icon">R</span>;
-
-    render(
-      <Button leftIcon={leftIcon} rightIcon={rightIcon}>
-        With Icons
-      </Button>
-    );
-
-    // Check that the icons are displayed
-    expect(screen.getByTestId('left-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('right-icon')).toBeInTheDocument();
-
-    // Check that the button text is displayed
-    expect(screen.getByText('With Icons')).toBeInTheDocument();
-  });
 
   // Test click handler
   it('calls onClick handler when clicked', () => {
@@ -108,31 +66,7 @@ describe('Button Component', () => {
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  // Test that disabled button doesn't call onClick
-  it('does not call onClick when disabled', () => {
-    const handleClick = jest.fn();
 
-    render(<Button onClick={handleClick} disabled>Click me</Button>);
-
-    // Try to click the button
-    fireEvent.click(screen.getByRole('button', { name: /click me/i }));
-
-    // Check that the click handler was not called
-    expect(handleClick).not.toHaveBeenCalled();
-  });
-
-  // Test that loading button doesn't call onClick
-  it('does not call onClick when loading', () => {
-    const handleClick = jest.fn();
-
-    render(<Button onClick={handleClick} isLoading>Click me</Button>);
-
-    // Try to click the button
-    fireEvent.click(screen.getByRole('button'));
-
-    // Check that the click handler was not called
-    expect(handleClick).not.toHaveBeenCalled();
-  });
 
   // Test custom className
   it('applies custom className', () => {

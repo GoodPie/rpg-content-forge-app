@@ -38,3 +38,40 @@ model EncounterTag {
 
   @@id([encounterId, tagId])
 }
+
+// Variable library model - a collection of related variables
+model VariableLibrary {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  variables   Variable[]  // Relation to variables
+  tags        String?     // Comma-separated tags for categorization
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// Variable model - a named variable with multiple possible values
+model Variable {
+  id               String           @id @default(uuid())
+  name             String           // Variable name (e.g., "forest_state")
+  description      String?          // Optional description
+  library          VariableLibrary  @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  libraryId        String
+  values           VariableValue[]  // Relation to variable values
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@unique([name, libraryId])
+}
+
+// Variable value model - a possible value for a variable
+model VariableValue {
+  id          String    @id @default(uuid())
+  text        String    // The actual text value
+  condition   String?   // Optional condition (e.g., "time_of_day == night")
+  weight      Float     @default(1.0) // Weight for random selection (higher = more likely)
+  variable    Variable  @relation(fields: [variableId], references: [id], onDelete: Cascade)
+  variableId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

@@ -35,11 +35,11 @@ export default async function EncountersPage() {
           </p>
         </div>
 
-        <Button asChild>
-          <Link href="/template-editor/encounters/new">
+        <Link href="/template-editor/encounters/new">
+          <Button asChild>
             New Encounter
-          </Link>
-        </Button>
+          </Button>
+        </Link>
 
       </div>
 
@@ -67,15 +67,15 @@ export default async function EncountersPage() {
                           gap="gap-2" 
                         />
 
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          asChild
-                        >
-                          <Link href={`/template-editor/encounters/${template.id}/edit`}>
+                        <Link href={`/template-editor/encounters/${template.id}/edit`}>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            asChild
+                          >
                             Edit
-                          </Link>
-                        </Button>
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                     <div className="mt-2 ml-2">
@@ -93,11 +93,11 @@ export default async function EncountersPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Create your first encounter template to get started.
           </p>
-          <Button asChild>
-            <Link href="/template-editor/encounters/new">
+          <Link href="/template-editor/encounters/new">
+            <Button asChild>
               Create Encounter Template
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       )}
 

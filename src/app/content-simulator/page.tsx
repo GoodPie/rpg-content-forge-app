@@ -84,7 +84,7 @@ const ContentSimulatorPage = () => {
           <p className="mt-2">Create a character and start a simulation to test your content.</p>
 
           <Button asChild>
-            <Link href="/content-simulator/character">
+            <Link className={"mt-4"} href="/content-simulator/character">
               Create Character
             </Link>
           </Button>
