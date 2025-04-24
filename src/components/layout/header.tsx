@@ -31,7 +31,7 @@ export function Header() {
           </div>
 
           {/* Desktop navigation */}
-          <nav className="hidden md:ml-6 md:flex md:space-x-8">
+          <nav className="hidden md:ml-6 md:flex md:space-x-8" data-testid="desktop-nav">
             {mainNavigationItems.map((item) => (
               <DesktopNavLink 
                 key={item.href}
@@ -91,6 +91,8 @@ export function Header() {
       <div
         className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}
         id="mobile-menu"
+        role="navigation"
+        data-testid="mobile-menu"
       >
         <div className="pt-2 pb-3 space-y-1">
           {mainNavigationItems.map((item) => (

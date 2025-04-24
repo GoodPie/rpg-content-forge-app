@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { prisma } from '@/lib/prisma';
 import { tagsToArray } from './utils';
-import EncounterTag from "@/components/features/encounters/encounter-tag";
+import { ColorfulEncounterTags } from "@/components/features/encounters/colorful-encounter-tags";
 
 export default async function EncountersPage() {
   // Fetch encounters from the database
@@ -62,11 +62,10 @@ export default async function EncountersPage() {
                       </div>
                       <div className="flex items-center space-x-3">
 
-                        <div className="flex space-x-2">
-                          {template.tags.map((tag) => (
-                            <EncounterTag key={tag} tag={tag} />
-                          ))}
-                        </div>
+                        <ColorfulEncounterTags 
+                          tags={template.tags} 
+                          gap="gap-2" 
+                        />
 
                         <Button 
                           variant="outline" 

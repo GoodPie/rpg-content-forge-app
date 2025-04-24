@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {Button} from "@/components/ui/button";
 import {prisma} from '@/lib/prisma';
 import {tagsToArray} from '../utils';
-import EncounterTag from "@/components/features/encounters/encounter-tag";
+import { ColorfulEncounterTags } from "@/components/features/encounters/colorful-encounter-tags";
 
 export default async function EncounterPage({params}: { params: { id: string } }) {
   const {id} = params;
@@ -56,11 +56,11 @@ export default async function EncounterPage({params}: { params: { id: string } }
       </div>
 
       {tags.length > 0 && (
-        <div className="mb-6 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <EncounterTag tag={tag} key={tag}/>
-          ))}
-        </div>
+        <ColorfulEncounterTags 
+          tags={tags} 
+          className="mb-6" 
+          gap="gap-2" 
+        />
       )}
 
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">

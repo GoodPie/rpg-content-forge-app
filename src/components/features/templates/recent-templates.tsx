@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Encounter } from '@/app/template-editor/encounters/types';
+import { ColorfulTagData } from "@/components/features/encounters/colorful-encounter-tags";
 
 interface RecentTemplatesProps {
   encounters?: Encounter[];
@@ -16,7 +17,7 @@ export const RecentTemplates = ({
 }: RecentTemplatesProps) => {
   // Take only the specified number of items
   const recentEncounters = encounters.slice(0, maxItems);
-  
+
   return (
     <Card>
       <CardHeader>
@@ -35,16 +36,10 @@ export const RecentTemplates = ({
                   </h3>
                   <p className="text-sm text-(--muted-foreground) line-clamp-1">{encounter.description}</p>
                   {encounter.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {encounter.tags.map((tag) => (
-                        <span 
-                          key={tag.id} 
-                          className="inline-block px-2 py-0.5 text-xs rounded-full bg-(--primary)/10 text-(--primary)"
-                        >
-                          {tag.name}
-                        </span>
-                      ))}
-                    </div>
+                    <ColorfulTagData 
+                      tags={encounter.tags} 
+                      className="mt-1" 
+                    />
                   )}
                 </div>
                 <Button variant="outline" size="sm" asChild>

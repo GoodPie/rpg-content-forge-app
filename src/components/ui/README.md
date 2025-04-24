@@ -162,6 +162,40 @@ import { CheckboxField } from "@/components/ui/checkbox-field";
 />
 ```
 
+### Tag
+
+A versatile component for displaying labels, categories, or statuses with customizable colors and variants.
+
+```tsx
+import { Tag } from "@/components/ui/tag";
+
+// Basic usage
+<Tag>Default Tag</Tag>
+
+// With color
+<Tag color="red">Red Tag</Tag>
+<Tag color="green">Green Tag</Tag>
+<Tag color="blue">Blue Tag</Tag>
+<Tag color="yellow">Yellow Tag</Tag>
+<Tag color="purple">Purple Tag</Tag>
+<Tag color="gray">Gray Tag</Tag>
+
+// With variant
+<Tag variant="default">Default Variant</Tag>
+<Tag variant="secondary">Secondary Variant</Tag>
+<Tag variant="destructive">Destructive Variant</Tag>
+<Tag variant="outline">Outline Variant</Tag>
+
+// Combined
+<Tag color="blue" variant="secondary">Blue Secondary Tag</Tag>
+```
+
+Props:
+- `children`: React.ReactNode - The content of the tag
+- `variant`: "default" | "secondary" | "destructive" | "outline" - The visual style variant (default: "outline")
+- `color`: "default" | "red" | "green" | "blue" | "yellow" | "purple" | "gray" - The color of the tag (default: "default")
+- `className`: string - Additional CSS classes to apply
+
 ## Best Practices
 
 1. **Use Consistent Components**: Use these components instead of creating new ones for similar purposes.
