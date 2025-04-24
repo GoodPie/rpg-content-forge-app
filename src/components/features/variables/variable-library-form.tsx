@@ -55,6 +55,37 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     return { isValid: true };
   };
 
+  // Helper function to get the success message based on edit mode
+  const getSuccessMessage = () => {
+    if (isEdit) {
+      return 'The variable library has been updated successfully.';
+    }
+    return 'The variable library has been created successfully.';
+  };
+
+  // Helper function to get the error message based on edit mode
+  const getErrorMessage = () => {
+    if (isEdit) {
+      return 'Failed to update library';
+    }
+    return 'Failed to create library';
+  };
+
+  // Helper function to get the redirect path
+  const getRedirectPath = () => {
+    if (isEdit && library) {
+      return `/content-database/variables/${library.id}`;
+    }
+
+    // For create mode, we need to use a function to get the ID from the response
+    return (response: any) => {
+      if (response.success && response.data) {
+        return `/content-database/variables/${response.data.id}`;
+      }
+      return '';
+    };
+  };
+
   // Use the form submission hook
   const { handleSubmit, isSubmitting } = useFormSubmission(
     async (data: FormValues) => {
@@ -68,20 +99,9 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     },
     {
       validationFn: validateForm,
-      successMessage: isEdit 
-        ? 'The variable library has been updated successfully.' 
-        : 'The variable library has been created successfully.',
-      errorMessage: isEdit 
-        ? 'Failed to update library' 
-        : 'Failed to create library',
-      redirectPath: isEdit && library 
-        ? `/content-database/variables/${library.id}`
-        : (response) => {
-            if (response.success && response.data) {
-              return `/content-database/variables/${response.data.id}`;
-            }
-            return '';
-          },
+      successMessage: getSuccessMessage(),
+      errorMessage: getErrorMessage(),
+      redirectPath: getRedirectPath(),
     }
   );
 
@@ -89,15 +109,40 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     handleSubmit(data);
   };
 
+  // Helper function to get the form title
+  const getFormTitle = () => {
+    if (isEdit) {
+      return 'Edit Variable Library';
+    }
+    return 'Create Variable Library';
+  };
+
+  // Helper function to get the form description
+  const getFormDescription = () => {
+    if (isEdit) {
+      return 'Update the details of your variable library';
+    }
+    return 'Create a new collection of variables for procedural content';
+  };
+
+  // Helper function to get the submit button text
+  const getSubmitButtonText = () => {
+    if (isSubmitting) {
+      return 'Saving...';
+    }
+
+    if (isEdit) {
+      return 'Update Library';
+    }
+
+    return 'Create Library';
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{isEdit ? 'Edit Variable Library' : 'Create Variable Library'}</CardTitle>
-        <CardDescription>
-          {isEdit
-            ? 'Update the details of your variable library'
-            : 'Create a new collection of variables for procedural content'}
-        </CardDescription>
+        <CardTitle>{getFormTitle()}</CardTitle>
+        <CardDescription>{getFormDescription()}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -167,7 +212,7 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : isEdit ? 'Update Library' : 'Create Library'}
+              {getSubmitButtonText()}
             </Button>
           </CardFooter>
         </form>

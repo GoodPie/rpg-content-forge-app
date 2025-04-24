@@ -57,6 +57,37 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     return { isValid: true };
   };
 
+  // Helper function to get the success message based on edit mode
+  const getSuccessMessage = () => {
+    if (isEdit) {
+      return "Variable updated successfully";
+    }
+    return "Variable created successfully";
+  };
+
+  // Helper function to get the error message based on edit mode
+  const getErrorMessage = () => {
+    if (isEdit) {
+      return 'Failed to update variable';
+    }
+    return 'Failed to create variable';
+  };
+
+  // Helper function to get the redirect path
+  const getRedirectPath = () => {
+    if (isEdit && variable) {
+      return `/content-database/variables/${libraryId}/variables/${variable.id}`;
+    }
+
+    // For create mode, we need to use a function to get the ID from the response
+    return (response: any) => {
+      if (response.success && response.data) {
+        return `/content-database/variables/${libraryId}/variables/${response.data.id}`;
+      }
+      return '';
+    };
+  };
+
   // Use the form submission hook
   const { handleSubmit, isSubmitting } = useFormSubmission(
     async (data: FormValues) => {
@@ -70,16 +101,9 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     },
     {
       validationFn: validateForm,
-      successMessage: isEdit ? "Variable updated successfully" : "Variable created successfully",
-      errorMessage: isEdit ? 'Failed to update variable' : 'Failed to create variable',
-      redirectPath: isEdit && variable 
-        ? `/content-database/variables/${libraryId}/variables/${variable.id}`
-        : (response) => {
-            if (response.success && response.data) {
-              return `/content-database/variables/${libraryId}/variables/${response.data.id}`;
-            }
-            return '';
-          },
+      successMessage: getSuccessMessage(),
+      errorMessage: getErrorMessage(),
+      redirectPath: getRedirectPath(),
     }
   );
 
@@ -87,15 +111,40 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     handleSubmit(data);
   };
 
+  // Helper function to get the form title
+  const getFormTitle = () => {
+    if (isEdit) {
+      return 'Edit Variable';
+    }
+    return 'Create Variable';
+  };
+
+  // Helper function to get the form description
+  const getFormDescription = () => {
+    if (isEdit) {
+      return 'Update the details of your variable';
+    }
+    return 'Create a new variable for procedural content';
+  };
+
+  // Helper function to get the submit button text
+  const getSubmitButtonText = () => {
+    if (isSubmitting) {
+      return 'Saving...';
+    }
+
+    if (isEdit) {
+      return 'Update Variable';
+    }
+
+    return 'Create Variable';
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{isEdit ? 'Edit Variable' : 'Create Variable'}</CardTitle>
-        <CardDescription>
-          {isEdit
-            ? 'Update the details of your variable'
-            : 'Create a new variable for procedural content'}
-        </CardDescription>
+        <CardTitle>{getFormTitle()}</CardTitle>
+        <CardDescription>{getFormDescription()}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -156,7 +205,7 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : isEdit ? 'Update Variable' : 'Create Variable'}
+              {getSubmitButtonText()}
             </Button>
           </CardFooter>
         </form>
