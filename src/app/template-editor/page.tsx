@@ -1,8 +1,5 @@
-import Link from 'next/link';
 import {TemplateCard} from "@/components/ui/template-card";
-import {Card, CardHeader, CardTitle, CardContent, CardDescription} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
-import { prisma } from '@/lib/prisma';
+import {Card, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import { getAllEncounters } from './encounters/actions';
 import { RecentTemplates } from '@/components/features/templates/recent-templates';
 

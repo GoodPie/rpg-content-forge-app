@@ -1,6 +1,4 @@
-import Link from 'next/link';
 import {FeatureCard} from "@/components/ui/feature-card";
-import {Button} from "@/components/ui/button";
 import { getAllEncounters } from '@/app/template-editor/encounters/actions';
 import { RecentTemplates } from '@/components/features/templates/recent-templates';
 

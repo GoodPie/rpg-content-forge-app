@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import {Button} from "@/components/ui/button";
 import { Encounter } from '@/app/template-editor/encounters/types';
 import { getAllEncounters } from '@/app/template-editor/encounters/actions';
@@ -41,14 +40,13 @@ export default function TextVariationPage() {
 
     // Find all variable definitions in the content
     const lines = content.split('\n');
-    let currentVariable = '';
 
     for (const line of lines) {
       // Check if line contains a variable definition
       if (line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/)) {
         const match = line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/);
         if (match) {
-          const [_, varName, varValues] = match;
+          const [, varName, varValues] = match;
           variables[varName] = varValues.split(',').map(v => v.trim());
         }
       }
@@ -226,7 +224,6 @@ export default function TextVariationPage() {
 
                 // Parse variables from the content
                 const content = selectedEncounter.content;
-                const variables: Record<string, string[]> = {};
 
                 // Find variable definitions in the content
                 const variablesSection = content.indexOf('Variables:');
@@ -248,7 +245,7 @@ export default function TextVariationPage() {
                       const match = line.trim().match(/^\s*([a-zA-Z0-9_]+):\s*\[(.*)\]\s*$/);
                       if (!match) return null;
 
-                      const [_, varName, varValues] = match;
+                      const [, varName, varValues] = match;
                       const values = varValues.split(',').map(v => v.trim()).join(', ');
 
                       return (
