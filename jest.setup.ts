@@ -1,4 +1,5 @@
-import '@testing-library/jest-dom'
+import { jest } from '@jest/globals';
+import '@testing-library/jest-dom';
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({

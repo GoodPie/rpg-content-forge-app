@@ -206,3 +206,43 @@ export const getEncounter = async (id: string): Promise<ActionResponse<Encounter
     };
   }
 };
+
+/**
+ * Retrieves all encounters with their tags
+ */
+export const getAllEncounters = async (): Promise<ActionResponse<Encounter[]>> => {
+  try {
+    const encounters = await prisma.encounter.findMany({
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      },
+      orderBy: {
+        updatedAt: 'desc'
+      }
+    });
+
+    // Transform the data to match the Encounter interface
+    const transformedEncounters: Encounter[] = encounters.map(encounter => ({
+      id: encounter.id,
+      name: encounter.name,
+      description: encounter.description,
+      content: encounter.content,
+      tags: encounter.tags.map(et => ({
+        id: et.tag.id,
+        name: et.tag.name
+      }))
+    }));
+
+    return { success: true, encounters: transformedEncounters };
+  } catch (error) {
+    console.error('Error fetching encounters:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+    };
+  }
+};

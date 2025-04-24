@@ -1,13 +1,27 @@
+/**
+ * @file navigation-links.tsx
+ * @description This file defines the navigation links used in the application.
+ * It includes data structures for navigation items and React components for rendering these items in different styles (desktop, mobile, sidebar).
+ */
+
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
+/**
+ * @typedef {Object} NavigationItem
+ * @property {string} href - The URL of the navigation item.
+ * @property {string} label - The display text for the navigation item.
+ */
 export type NavigationItem = {
   href: string;
   label: string;
 };
 
+/**
+ * @constant {NavigationItem[]} mainNavigationItems
+ * @description An array of NavigationItem objects representing the main navigation links in the application.
+ */
 export const mainNavigationItems: NavigationItem[] = [
   { href: '/template-editor', label: 'Template Editor' },
   { href: '/procedural-generator', label: 'Procedural Generator' },
@@ -16,6 +30,12 @@ export const mainNavigationItems: NavigationItem[] = [
   { href: '/export-manager', label: 'Export Manager' },
 ];
 
+/**
+ * @function getFeatureNavigationItems
+ * @description Returns an array of NavigationItem objects for a given feature.
+ * @param {string} feature - The name of the feature to get navigation items for.
+ * @returns {NavigationItem[]} An array of NavigationItem objects.
+ */
 export const getFeatureNavigationItems = (feature: string): NavigationItem[] => {
   switch (feature) {
     case 'template-editor':
@@ -64,18 +84,30 @@ export const getFeatureNavigationItems = (feature: string): NavigationItem[] => 
   }
 };
 
+/**
+ * @interface DesktopNavLinkProps
+ * @description Interface for the props of the DesktopNavLink component.
+ * @property {NavigationItem} item - The navigation item to render.
+ * @property {boolean} isActive - Whether the navigation item is currently active.
+ */
 interface DesktopNavLinkProps {
   item: NavigationItem;
   isActive: boolean;
 }
 
-export function DesktopNavLink({ item, isActive }: DesktopNavLinkProps) {
+/**
+ * @function DesktopNavLink
+ * @description A React component that renders a navigation link for desktop view.
+ * @param {DesktopNavLinkProps} props - The props for the component.
+ * @returns {JSX.Element} A React element representing the desktop navigation link.
+ */
+export function DesktopNavLink({ item, isActive }: Readonly<DesktopNavLinkProps>) {
   return (
-    <Link 
-      href={item.href} 
+    <Link
+      href={item.href}
       className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-        isActive 
-          ? 'border-(--primary) text-(--foreground)' 
+        isActive
+          ? 'border-(--primary) text-(--foreground)'
           : 'border-transparent text-(--muted-foreground) hover:text-(--foreground) hover:border-(--border)'
       }`}
     >
@@ -84,12 +116,24 @@ export function DesktopNavLink({ item, isActive }: DesktopNavLinkProps) {
   );
 }
 
+/**
+ * @interface MobileNavLinkProps
+ * @description Interface for the props of the MobileNavLink component.
+ * @property {NavigationItem} item - The navigation item to render.
+ * @property {boolean} isActive - Whether the navigation item is currently active.
+ */
 interface MobileNavLinkProps {
   item: NavigationItem;
   isActive: boolean;
 }
 
-export function MobileNavLink({ item, isActive }: MobileNavLinkProps) {
+/**
+ * @function MobileNavLink
+ * @description A React component that renders a navigation link for mobile view.
+ * @param {MobileNavLinkProps} props - The props for the component.
+ * @returns {JSX.Element} A React element representing the mobile navigation link.
+ */
+export function MobileNavLink({ item, isActive }: Readonly<MobileNavLinkProps>) {
   return (
     <Link
       href={item.href}
@@ -104,18 +148,30 @@ export function MobileNavLink({ item, isActive }: MobileNavLinkProps) {
   );
 }
 
+/**
+ * @interface SidebarNavLinkProps
+ * @description Interface for the props of the SidebarNavLink component.
+ * @property {NavigationItem} item - The navigation item to render.
+ * @property {boolean} isActive - Whether the navigation item is currently active.
+ */
 interface SidebarNavLinkProps {
   item: NavigationItem;
   isActive: boolean;
 }
 
-export function SidebarNavLink({ item, isActive }: SidebarNavLinkProps) {
+/**
+ * @function SidebarNavLink
+ * @description A React component that renders a navigation link for sidebar view.
+ * @param {SidebarNavLinkProps} props - The props for the component.
+ * @returns {JSX.Element} A React element representing the sidebar navigation link.
+ */
+export function SidebarNavLink({ item, isActive }: Readonly<SidebarNavLinkProps>) {
   return (
-    <Link 
+    <Link
       href={item.href}
       className={`block px-3 py-2 rounded-md ${
-        isActive 
-          ? 'bg-(--sidebar-accent) text-(--sidebar-foreground)' 
+        isActive
+          ? 'bg-(--sidebar-accent) text-(--sidebar-foreground)'
           : 'text-(--sidebar-foreground/70) hover:bg-(--sidebar-accent/50) hover:text-(--sidebar-foreground)'
       }`}
     >

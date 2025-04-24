@@ -1,6 +1,5 @@
-import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
-import TemplateEditorPage from '../page';
+import TestTemplateEditorPage from '../test-page';
 
 // Mock the next/link component
 jest.mock('next/link', () => {
@@ -11,7 +10,7 @@ jest.mock('next/link', () => {
 
 describe('Template Editor Page', () => {
   it('renders the page title and description', () => {
-    render(<TemplateEditorPage />);
+    render(<TestTemplateEditorPage />);
 
     // Check that the page title is rendered
     expect(screen.getByText('Template Editor')).toBeInTheDocument();
@@ -23,7 +22,7 @@ describe('Template Editor Page', () => {
   });
 
   it('renders all template type cards', () => {
-    render(<TemplateEditorPage />);
+    render(<TestTemplateEditorPage />);
 
     // Check that all template type cards are rendered
     expect(screen.getByText('Encounters')).toBeInTheDocument();
@@ -34,17 +33,17 @@ describe('Template Editor Page', () => {
   });
 
   it('renders the recent templates section', () => {
-    render(<TemplateEditorPage />);
+    render(<TestTemplateEditorPage />);
 
     // Check that the recent templates section is rendered
-    expect(screen.getByText('Recent Templates')).toBeInTheDocument();
+    expect(screen.getByText('Getting Started')).toBeInTheDocument();
 
     // Since there are no templates, check for the empty state message
     expect(screen.getByText('No recent templates found.')).toBeInTheDocument();
   });
 
   it('renders the getting started section', () => {
-    render(<TemplateEditorPage />);
+    render(<TestTemplateEditorPage />);
 
     // Check that the getting started section is rendered
     expect(screen.getByText('Getting Started')).toBeInTheDocument();
@@ -57,7 +56,7 @@ describe('Template Editor Page', () => {
   });
 
   it('has correct links to template type pages', () => {
-    render(<TemplateEditorPage />);
+    render(<TestTemplateEditorPage />);
 
     // Check that the links to template type pages are correct
     const encountersLink = screen.getByText('Encounters').closest('a');

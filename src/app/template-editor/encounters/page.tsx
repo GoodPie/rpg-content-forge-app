@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { prisma } from '@/lib/prisma';
 import { tagsToArray } from './utils';
+import { ColorfulEncounterTags } from "@/components/features/encounters/colorful-encounter-tags";
 
 export default async function EncountersPage() {
   // Fetch encounters from the database
@@ -52,12 +53,20 @@ export default async function EncountersPage() {
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{template.name}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">ID: {template.id}</p>
+
+                        <div className="ml-2 flex flex-col">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">{template.name}</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">ID: {template.id}</span>
                         </div>
+
                       </div>
                       <div className="flex items-center space-x-3">
+
+                        <ColorfulEncounterTags 
+                          tags={template.tags} 
+                          gap="gap-2" 
+                        />
+
                         <Button 
                           variant="outline" 
                           size="sm" 
@@ -67,19 +76,9 @@ export default async function EncountersPage() {
                             Edit
                           </Link>
                         </Button>
-                        <div className="flex space-x-2">
-                          {template.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                       </div>
                     </div>
-                    <div className="mt-2">
+                    <div className="mt-2 ml-2">
                       <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{template.description}</p>
                     </div>
                   </div>
@@ -125,12 +124,4 @@ export default async function EncountersPage() {
       </div>
     </div>
   );
-}
-
-// Types for TypeScript
-interface EncounterTemplate {
-  id: string;
-  name: string;
-  description: string;
-  tags: string[];
 }

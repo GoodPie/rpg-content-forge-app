@@ -22,7 +22,7 @@ export function Header() {
     <header className="bg-(--background) shadow-sm">
       <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16">
-          <div className="flex justify-start">
+          <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-(--foreground)">
                 RPG Content Forge
@@ -31,7 +31,7 @@ export function Header() {
           </div>
 
           {/* Desktop navigation */}
-          <nav className="hidden md:ml-6 md:flex md:space-x-8">
+          <nav className="hidden md:ml-6 md:flex md:space-x-8" data-testid="desktop-nav">
             {mainNavigationItems.map((item) => (
               <DesktopNavLink 
                 key={item.href}
@@ -42,9 +42,9 @@ export function Header() {
           </nav>
 
           {/* Mobile menu button */}
-          <div className="flex items-center md:hidden">
+          <div className="flex ms-auto items-center md:hidden">
             <Button
-              className="inline-flex items-center justify-center p-2 rounded-md text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent)"
+              className="inline-flex items-center justify-center p-2 rounded-md text-(--muted-foreground) bg-(--primary) hover:text-(--foreground) hover:bg-(--accent)"
               aria-controls="mobile-menu"
               aria-expanded="false"
               onClick={toggleMenu}
@@ -91,6 +91,8 @@ export function Header() {
       <div
         className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}
         id="mobile-menu"
+        role="navigation"
+        data-testid="mobile-menu"
       >
         <div className="pt-2 pb-3 space-y-1">
           {mainNavigationItems.map((item) => (
