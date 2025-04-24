@@ -13,7 +13,9 @@ export function VariableLibraryCard({ library }: Readonly<VariableLibraryCardPro
   return (
     <Card key={library.id} className="overflow-hidden">
       <CardHeader className="pb-2">
-        <CardTitle>{library.name}</CardTitle>
+        <Link href={`/content-database/variables/${library.id}`} className="hover:text-primary transition-colors">
+          <CardTitle className="cursor-pointer">{library.name}</CardTitle>
+        </Link>
         <CardDescription>
           {library.tags ? library.tags : 'No tags'}
         </CardDescription>
