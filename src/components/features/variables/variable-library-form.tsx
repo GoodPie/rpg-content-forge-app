@@ -10,6 +10,7 @@ import {Textarea} from '@/components/ui/textarea';
 import {VariableLibrary} from '@/types/variables';
 import {createVariableLibrary, updateVariableLibrary} from '@/app/content-database/variables/actions';
 import {useFormSubmission} from '@/hooks';
+import {getFormTitle, getFormDescription, getSubmitButtonText, getSuccessMessage, getErrorMessage} from '@/lib/form-helpers';
 
 interface FormValues {
   name: string;
@@ -55,21 +56,7 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     return { isValid: true };
   };
 
-  // Helper function to get the success message based on edit mode
-  const getSuccessMessage = () => {
-    if (isEdit) {
-      return 'The variable library has been updated successfully.';
-    }
-    return 'The variable library has been created successfully.';
-  };
-
-  // Helper function to get the error message based on edit mode
-  const getErrorMessage = () => {
-    if (isEdit) {
-      return 'Failed to update library';
-    }
-    return 'Failed to create library';
-  };
+  // Using the form helpers for success and error messages
 
   // Helper function to get the redirect path
   const getRedirectPath = () => {
@@ -99,8 +86,8 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     },
     {
       validationFn: validateForm,
-      successMessage: getSuccessMessage(),
-      errorMessage: getErrorMessage(),
+      successMessage: getSuccessMessage(isEdit, 'The variable library has been created successfully.', 'The variable library has been updated successfully.'),
+      errorMessage: getErrorMessage(isEdit, 'Failed to create library', 'Failed to update library'),
       redirectPath: getRedirectPath(),
     }
   );
@@ -109,40 +96,13 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
     handleSubmit(data);
   };
 
-  // Helper function to get the form title
-  const getFormTitle = () => {
-    if (isEdit) {
-      return 'Edit Variable Library';
-    }
-    return 'Create Variable Library';
-  };
-
-  // Helper function to get the form description
-  const getFormDescription = () => {
-    if (isEdit) {
-      return 'Update the details of your variable library';
-    }
-    return 'Create a new collection of variables for procedural content';
-  };
-
-  // Helper function to get the submit button text
-  const getSubmitButtonText = () => {
-    if (isSubmitting) {
-      return 'Saving...';
-    }
-
-    if (isEdit) {
-      return 'Update Library';
-    }
-
-    return 'Create Library';
-  };
+  // Using the form helpers for UI text
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{getFormTitle()}</CardTitle>
-        <CardDescription>{getFormDescription()}</CardDescription>
+        <CardTitle>{getFormTitle(isEdit, 'Create Variable Library', 'Edit Variable Library')}</CardTitle>
+        <CardDescription>{getFormDescription(isEdit, 'Create a new collection of variables for procedural content', 'Update the details of your variable library')}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -212,7 +172,7 @@ export function VariableLibraryForm({library, isEdit = false}: Readonly<Variable
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {getSubmitButtonText()}
+              {getSubmitButtonText(isSubmitting, isEdit, 'Create Library', 'Update Library')}
             </Button>
           </CardFooter>
         </form>

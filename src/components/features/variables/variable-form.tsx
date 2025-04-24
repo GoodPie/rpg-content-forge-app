@@ -10,6 +10,7 @@ import {Textarea} from '@/components/ui/textarea';
 import {Variable} from '@/types/variables';
 import {createVariable, updateVariable} from '@/app/content-database/variables/actions';
 import {useFormSubmission} from '@/hooks';
+import {getFormTitle, getFormDescription, getSubmitButtonText, getSuccessMessage, getErrorMessage} from '@/lib/form-helpers';
 
 interface FormValues {
   name: string;
@@ -57,21 +58,7 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     return { isValid: true };
   };
 
-  // Helper function to get the success message based on edit mode
-  const getSuccessMessage = () => {
-    if (isEdit) {
-      return "Variable updated successfully";
-    }
-    return "Variable created successfully";
-  };
-
-  // Helper function to get the error message based on edit mode
-  const getErrorMessage = () => {
-    if (isEdit) {
-      return 'Failed to update variable';
-    }
-    return 'Failed to create variable';
-  };
+  // Get success and error messages using the form helpers
 
   // Helper function to get the redirect path
   const getRedirectPath = () => {
@@ -101,8 +88,8 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     },
     {
       validationFn: validateForm,
-      successMessage: getSuccessMessage(),
-      errorMessage: getErrorMessage(),
+      successMessage: getSuccessMessage(isEdit, "Variable created successfully", "Variable updated successfully"),
+      errorMessage: getErrorMessage(isEdit, "Failed to create variable", "Failed to update variable"),
       redirectPath: getRedirectPath(),
     }
   );
@@ -111,40 +98,13 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
     handleSubmit(data);
   };
 
-  // Helper function to get the form title
-  const getFormTitle = () => {
-    if (isEdit) {
-      return 'Edit Variable';
-    }
-    return 'Create Variable';
-  };
-
-  // Helper function to get the form description
-  const getFormDescription = () => {
-    if (isEdit) {
-      return 'Update the details of your variable';
-    }
-    return 'Create a new variable for procedural content';
-  };
-
-  // Helper function to get the submit button text
-  const getSubmitButtonText = () => {
-    if (isSubmitting) {
-      return 'Saving...';
-    }
-
-    if (isEdit) {
-      return 'Update Variable';
-    }
-
-    return 'Create Variable';
-  };
+  // Using the form helpers for UI text
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{getFormTitle()}</CardTitle>
-        <CardDescription>{getFormDescription()}</CardDescription>
+        <CardTitle>{getFormTitle(isEdit, 'Create Variable', 'Edit Variable')}</CardTitle>
+        <CardDescription>{getFormDescription(isEdit, 'Create a new variable for procedural content', 'Update the details of your variable')}</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -205,7 +165,7 @@ export function VariableForm({variable, libraryId, isEdit = false}: VariableForm
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {getSubmitButtonText()}
+              {getSubmitButtonText(isSubmitting, isEdit, 'Create Variable', 'Update Variable')}
             </Button>
           </CardFooter>
         </form>

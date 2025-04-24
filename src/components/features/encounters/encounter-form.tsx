@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { EncounterData } from '@/app/template-editor/encounters/types';
+import { getFormTitle, getFormDescription, getSubmitButtonText } from '@/lib/form-helpers';
 
 interface EncounterFormProps {
   defaultValues?: EncounterData;
@@ -117,10 +118,10 @@ export const EncounterForm = ({
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {isEditing ? 'Edit' : 'New'} Encounter Template
+          {getFormTitle(isEditing, 'New Encounter Template', 'Edit Encounter Template')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          {isEditing ? 'Update your' : 'Create a new'} interactive scenario{isEditing ? '' : ' with procedural elements'}.
+          {getFormDescription(isEditing, 'Create a new interactive scenario with procedural elements.', 'Update your interactive scenario.')}
         </p>
       </div>
 
@@ -227,9 +228,7 @@ Variables:
               </Link>
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting 
-                ? (isEditing ? 'Updating...' : 'Creating...') 
-                : (isEditing ? 'Update Template' : 'Create Template')}
+              {getSubmitButtonText(isSubmitting, isEditing, 'Create Template', 'Update Template', isEditing ? 'Updating...' : 'Creating...')}
             </Button>
           </div>
         </form>

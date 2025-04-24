@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner";
 import { VariableValue } from '@/types/variables';
 import { createVariableValue, updateVariableValue } from '@/app/content-database/variables/actions';
+import { getFormTitle, getFormDescription, getSubmitButtonText } from '@/lib/form-helpers';
 
 interface FormValues {
   text: string;
@@ -96,11 +97,9 @@ export function VariableValueForm({ value, variableId, libraryId, isEdit = false
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{isEdit ? 'Edit Value' : 'Add Value'}</CardTitle>
+        <CardTitle>{getFormTitle(isEdit, 'Add Value', 'Edit Value')}</CardTitle>
         <CardDescription>
-          {isEdit
-            ? 'Update this variable value'
-            : 'Add a new possible value for this variable'}
+          {getFormDescription(isEdit, 'Add a new possible value for this variable', 'Update this variable value')}
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -195,7 +194,7 @@ export function VariableValueForm({ value, variableId, libraryId, isEdit = false
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : isEdit ? 'Update Value' : 'Add Value'}
+              {getSubmitButtonText(isSubmitting, isEdit, 'Add Value', 'Update Value')}
             </Button>
           </CardFooter>
         </form>

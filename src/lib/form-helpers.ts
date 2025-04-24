@@ -1,5 +1,28 @@
 /**
  * Helper functions for form components
+ * 
+ * These helpers provide consistent UI text and messages for forms across the application.
+ * They handle the differences between create and edit modes, as well as submission states.
+ * 
+ * Usage example:
+ * ```tsx
+ * import { getFormTitle, getFormDescription, getSubmitButtonText } from '@/lib/form-helpers';
+ * 
+ * // In your component:
+ * return (
+ *   <Card>
+ *     <CardHeader>
+ *       <CardTitle>{getFormTitle(isEdit, 'Create Item', 'Edit Item')}</CardTitle>
+ *       <CardDescription>{getFormDescription(isEdit, 'Create a new item', 'Update this item')}</CardDescription>
+ *     </CardHeader>
+ *     <CardFooter>
+ *       <Button type="submit" disabled={isSubmitting}>
+ *         {getSubmitButtonText(isSubmitting, isEdit, 'Create', 'Update')}
+ *       </Button>
+ *     </CardFooter>
+ *   </Card>
+ * );
+ * ```
  */
 
 /**
@@ -61,6 +84,24 @@ export const getSubmitButtonText = (
  * @param createMessage - The message to use in create mode
  * @param editMessage - The message to use in edit mode
  * @returns The success message
+ * 
+ * @example
+ * // With useFormSubmission hook
+ * const { handleSubmit, isSubmitting } = useFormSubmission(
+ *   async (data) => {
+ *     if (isEdit) {
+ *       return await updateEntity(id, data);
+ *     } else {
+ *       return await createEntity(data);
+ *     }
+ *   },
+ *   {
+ *     validationFn: validateForm,
+ *     successMessage: getSuccessMessage(isEdit, "Created successfully", "Updated successfully"),
+ *     errorMessage: getErrorMessage(isEdit, "Failed to create", "Failed to update"),
+ *     redirectPath: getRedirectPath(),
+ *   }
+ * );
  */
 export const getSuccessMessage = (
   isEdit: boolean,
