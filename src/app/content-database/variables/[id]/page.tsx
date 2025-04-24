@@ -22,8 +22,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {useVariableLibrary, useTabs, useEntityDelete} from '@/hooks';
 
-export default function VariableLibraryPage({params}: { params: { id: string } }) {
-  const router = useRouter();
+export default function VariableLibraryPage({params}: { params: Promise<{ id: string }> }) {
 
   // Unwrap the params Promise
   const unwrappedParams = React.use(params);
@@ -222,7 +221,9 @@ export default function VariableLibraryPage({params}: { params: { id: string } }
                       <div className="flex gap-2">
                         <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}`}>
                           <Button variant="ghost" size="sm" asChild>
-                            View
+                            <span>
+                              View
+                            </span>
                           </Button>
                         </Link>
                         <Link href={`/content-database/variables/${unwrappedParams.id}/variables/${variable.id}/edit`}>
