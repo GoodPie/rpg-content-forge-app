@@ -47,9 +47,9 @@ export default async function EncountersPage() {
         <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
             {formattedTemplates.map((template) => (
-              <li key={template.id}>
+              <li key={template.id} className="flex hover:bg-gray-50 dark:hover:bg-gray-700">
                 <Link href={`/template-editor/encounters/${template.id}`}
-                      className="block hover:bg-gray-50 dark:hover:bg-gray-700">
+                      className="flex-grow block">
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
@@ -66,16 +66,6 @@ export default async function EncountersPage() {
                           tags={template.tags} 
                           gap="gap-2" 
                         />
-
-                        <Link href={`/template-editor/encounters/${template.id}/edit`}>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            asChild
-                          >
-                            Edit
-                          </Button>
-                        </Link>
                       </div>
                     </div>
                     <div className="mt-2 ml-2">
@@ -83,6 +73,17 @@ export default async function EncountersPage() {
                     </div>
                   </div>
                 </Link>
+                <div className="flex items-center pr-4">
+                  <Link href={`/template-editor/encounters/${template.id}/edit`}>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      asChild
+                    >
+                      Edit
+                    </Button>
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>

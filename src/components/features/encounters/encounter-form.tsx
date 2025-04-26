@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { EncounterData } from '@/app/template-editor/encounters/types';
 import { getFormTitle, getFormDescription, getSubmitButtonText } from '@/lib/form-helpers';
+import { VariableSelectorModal } from './variable-selector-modal';
 
 interface EncounterFormProps {
   defaultValues?: EncounterData;
@@ -40,6 +41,8 @@ export const EncounterForm = ({
 }: EncounterFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isVariableSelectorOpen, setIsVariableSelectorOpen] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Define form with react-hook-form
   const form = useForm<EncounterData>({
@@ -65,6 +68,31 @@ export const EncounterForm = ({
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       return false;
     }
+  };
+
+  // Function to handle inserting a variable at the cursor position
+  const handleInsertVariable = (variableName: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const { selectionStart, selectionEnd } = textarea;
+    const currentContent = form.getValues('content');
+
+    // Insert the variable at the cursor position
+    const newContent = 
+      currentContent.substring(0, selectionStart) + 
+      `{{${variableName}}}` + 
+      currentContent.substring(selectionEnd);
+
+    // Update the form value
+    form.setValue('content', newContent, { shouldDirty: true });
+
+    // Focus the textarea and set the cursor position after the inserted variable
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPosition = selectionStart + variableName.length + 4; // +4 for the {{ and }}
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
+    }, 0);
   };
 
   if (success) {
@@ -197,6 +225,10 @@ Variables:
   a_stranger: [a hooded figure, an old man sitting on a stump, a wounded traveler]
   a_landmark: [a small campfire, a strange stone formation, an ancient tree]`}
                       {...field}
+                      ref={(e) => {
+                        field.ref(e);
+                        textareaRef.current = e;
+                      }}
                     />
                   </FormControl>
                   <div className="absolute top-2 right-2">
@@ -204,10 +236,7 @@ Variables:
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        // This would normally open a variable editor or syntax helper
-                        alert('Variable editor would open here');
-                      }}
+                      onClick={() => setIsVariableSelectorOpen(true)}
                     >
                       Insert Variable
                     </Button>
@@ -233,6 +262,13 @@ Variables:
           </div>
         </form>
       </Form>
+
+      {/* Variable Selector Modal */}
+      <VariableSelectorModal
+        isOpen={isVariableSelectorOpen}
+        onClose={() => setIsVariableSelectorOpen(false)}
+        onSelectVariable={handleInsertVariable}
+      />
     </div>
   );
 };

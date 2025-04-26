@@ -2,7 +2,7 @@
  * Utility functions for variable data validation and processing
  */
 
-import { VariableLibraryData, VariableData, VariableValueData } from '@/types/variables';
+import { VariableLibraryData, VariableData, VariableValueData, Variable } from '@/types/variables';
 
 /**
  * Maximum number of variables allowed per library
@@ -119,8 +119,22 @@ export const isValidCondition = (condition: string): boolean => {
  */
 export const parseTags = (tagsString?: string): string[] => {
   if (!tagsString) return [];
-  
+
   return tagsString.split(',')
     .map(tag => tag.trim())
     .filter(Boolean);
+};
+
+/**
+ * Filters variables based on a search term
+ * Matches against variable name and description
+ */
+export const filterVariablesBySearchTerm = (variables: Variable[], searchTerm: string): Variable[] => {
+  if (!searchTerm) return variables;
+
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  return variables.filter(variable => 
+    variable.name.toLowerCase().includes(lowerSearchTerm) ||
+    (variable.description?.toLowerCase() || '').includes(lowerSearchTerm)
+  );
 };

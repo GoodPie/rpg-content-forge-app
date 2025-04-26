@@ -6,7 +6,8 @@ import {
   processVariableData,
   processVariableValueData,
   isValidCondition,
-  parseTags
+  parseTags,
+  filterVariablesBySearchTerm
 } from '../variable-utils';
 
 describe('Variable Utilities', () => {
@@ -251,6 +252,47 @@ describe('Variable Utilities', () => {
 
     it('should return empty array for empty string', () => {
       expect(parseTags('')).toEqual([]);
+    });
+  });
+
+  describe('filterVariablesBySearchTerm', () => {
+    const variables = [
+      { id: '1', name: 'weather', description: 'Current weather conditions', values: [] },
+      { id: '2', name: 'location', description: 'Current location type', values: [] },
+      { id: '3', name: 'time_of_day', description: 'Current time of day', values: [] },
+      { id: '4', name: 'enemy_type', description: null, values: [] }
+    ];
+
+    it('should return all variables when search term is empty', () => {
+      expect(filterVariablesBySearchTerm(variables, '')).toEqual(variables);
+    });
+
+    it('should filter variables by name', () => {
+      const result = filterVariablesBySearchTerm(variables, 'wea');
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('1');
+    });
+
+    it('should filter variables by description', () => {
+      const result = filterVariablesBySearchTerm(variables, 'location');
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('2');
+    });
+
+    it('should handle case insensitive search', () => {
+      const result = filterVariablesBySearchTerm(variables, 'TIME');
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('3');
+    });
+
+    it('should handle null description', () => {
+      const result = filterVariablesBySearchTerm(variables, 'enemy');
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('4');
+    });
+
+    it('should return empty array when no matches found', () => {
+      expect(filterVariablesBySearchTerm(variables, 'nonexistent')).toEqual([]);
     });
   });
 });
